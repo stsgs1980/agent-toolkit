@@ -32,40 +32,33 @@ agent-toolkit/
 
 ## Quick Start
 
-### Option A: Copy-Paste Commands (recommended)
+### Option A: Setup Script with PAT (always works)
 
-Run these commands from your project root:
+If the GitHub repo is not publicly visible (404), use PAT:
 
 ```bash
-# 1. Clone toolkit to temp folder
-git clone https://github.com/Sts8987/agent-toolkit.git /tmp/agent-toolkit
-
-# 2. Copy skills and instructions into project
+# Run from your project root
+git clone https://ghp_YOUR_PAT_HERE@github.com/Sts8987/agent-toolkit.git /tmp/agent-toolkit
 cp -r /tmp/agent-toolkit/skills/ ./skills/
 cp -r /tmp/agent-toolkit/instructions/ ./instructions/
-
-# 3. Copy template files to project root
 cp /tmp/agent-toolkit/templates/AGENT_RULES.md ./AGENT_RULES.md
 cp /tmp/agent-toolkit/templates/worklog.md ./worklog.md
-
-# 4. Copy standards (optional, for reference)
-mkdir -p upload
-cp /tmp/agent-toolkit/standards/* ./upload/
-
-# 5. Clean up
+mkdir -p upload && cp /tmp/agent-toolkit/standards/*.md ./upload/ 2>/dev/null
 rm -rf /tmp/agent-toolkit
 ```
 
-### Option B: Copy Entire Folder
+Replace `ghp_YOUR_PAT_HERE` with your GitHub Personal Access Token.
+
+### Option B: Public Clone (if repo is visible)
 
 ```bash
-# Copy everything at once
-git clone https://github.com/Sts8987/agent-toolkit.git
-cp -r agent-toolkit/skills/ ./skills/
-cp -r agent-toolkit/instructions/ ./instructions/
-cp agent-toolkit/templates/AGENT_RULES.md ./
-cp agent-toolkit/templates/worklog.md ./
-rm -rf agent-toolkit
+git clone https://github.com/Sts8987/agent-toolkit.git /tmp/agent-toolkit
+cp -r /tmp/agent-toolkit/skills/ ./skills/
+cp -r /tmp/agent-toolkit/instructions/ ./instructions/
+cp /tmp/agent-toolkit/templates/AGENT_RULES.md ./AGENT_RULES.md
+cp /tmp/agent-toolkit/templates/worklog.md ./worklog.md
+mkdir -p upload && cp /tmp/agent-toolkit/standards/*.md ./upload/ 2>/dev/null
+rm -rf /tmp/agent-toolkit
 ```
 
 ### After Setup
