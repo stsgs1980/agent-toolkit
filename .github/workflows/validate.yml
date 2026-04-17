@@ -1,0 +1,90 @@
+name: Toolkit Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required files exist
+        run: |
+          echo "Checking structure..."
+          MISSING=0
+          for f in \
+            skills/git-safe-ops/SKILL.md \
+            skills/dev-watchdog/SKILL.md \
+            instructions/onboarding-protocol.md \
+            instructions/git-workflow-rules.md \
+            instructions/language-rule.md \
+            instructions/diagnostic-disclosure.md \
+            standards/README_TEMPLATE.md \
+            standards/No-Unicode_Policy_v2.0.md \
+            standards/MARKDOWN_STANDARD_RU_v2.0.md \
+            standards/REPRODUCIBILITY-STANDARD.md \
+            templates/AGENT_RULES.md \
+            templates/worklog.md \
+            README.md
+          do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          exit $MISSING
+
+      - name: Check for non-Cyrillic Unicode in skills and instructions
+        run: |
+          echo "Checking for forbidden Unicode..."
+          # Allow: ASCII (0-127), Cyrillic (128-255), newlines, tabs
+          # Forbid: emoji, special arrows, dashes, box-drawing, etc.
+          ERRORS=0
+          for f in skills/**/*.md instructions/*.md templates/*.md; do
+            if [ -f "$f" ]; then
+              # Check for common problematic characters
+              if grep -Pn '[\x{2190}-\x{21FF}\x{2192}\x{2194}\x{2196}-\x{2199}\x{21A9}-\x{21AA}\x{21B0}-\x{21B3}\x{21D0}-\x{21FF}\x{2200}-\x{22FF}\x{2300}-\x{23FF}\x{2500}-\x{257F}\x{2580}-\x{259F}\x{25A0}-\x{25FF}\x{2600}-\x{27BF}\x{1F300}-\x{1F9FF}]' "$f" 2>/dev/null; then
+                echo "FORBIDDEN UNICODE in $f"
+                ERRORS=1
+              fi
+            fi
+          done
+          exit $ERRORS
+
+      - name: Check markdown files have proper footer
+        run: |
+          echo "Checking Stack Signature footer..."
+          ERRORS=0
+          for f in README.md instructions/*.md templates/*.md skills/**/*.md; do
+            if [ -f "$f" ]; then
+              if ! grep -q "Built with:" "$f"; then
+                echo "NO FOOTER: $f"
+                ERRORS=1
+              fi
+            fi
+          done
+          exit $ERRORS
+
+      - name: Check no trailing whitespace
+        run: |
+          echo "Checking trailing whitespace..."
+          if grep -rn ' $' skills/ instructions/ standards/ templates/ README.md; then
+            echo "Found trailing whitespace"
+            exit 1
+          fi
+          echo "OK"
+
+      - name: Check no tabs (spaces only)
+        run: |
+          echo "Checking for tabs..."
+          if grep -Pn '\t' skills/ instructions/ standards/ templates/ README.md; then
+            echo "Found tabs (use spaces only)"
+            exit 1
+          fi
+          echo "OK"
