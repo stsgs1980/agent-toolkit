@@ -32,12 +32,40 @@ agent-toolkit/
 
 ## Quick Start
 
-### Option A: Setup Script with PAT (always works)
+### Option A: Bootstrap Script (always works, no git needed)
 
-If the GitHub repo is not publicly visible (404), use PAT:
+Copy the content of `dist/setup.txt` and paste into any chat.
+The agent will create all 8 files from the embedded content.
+No GitHub access, no PAT, no git required.
+
+Or run the script directly if you have the file:
 
 ```bash
-# Run from your project root
+# From local copy
+bash dist/setup.sh
+
+# Or from GitHub (with PAT)
+curl -sL https://ghp_YOUR_PAT@raw.githubusercontent.com/Sts8987/agent-toolkit/main/dist/setup.sh | bash
+```
+
+Files created:
+
+```
+instructions/
+  onboarding-protocol.md
+  git-workflow-rules.md
+  language-rule.md
+  diagnostic-disclosure.md
+skills/
+  git-safe-ops/SKILL.md
+  dev-watchdog/SKILL.md
+AGENT_RULES.md
+worklog.md
+```
+
+### Option B: Clone with PAT (if you have a GitHub token)
+
+```bash
 git clone https://ghp_YOUR_PAT_HERE@github.com/Sts8987/agent-toolkit.git /tmp/agent-toolkit
 cp -r /tmp/agent-toolkit/skills/ ./skills/
 cp -r /tmp/agent-toolkit/instructions/ ./instructions/
@@ -49,7 +77,7 @@ rm -rf /tmp/agent-toolkit
 
 Replace `ghp_YOUR_PAT_HERE` with your GitHub Personal Access Token.
 
-### Option B: Public Clone (if repo is visible)
+### Option C: Public Clone (if repo is visible on GitHub)
 
 ```bash
 git clone https://github.com/Sts8987/agent-toolkit.git /tmp/agent-toolkit
