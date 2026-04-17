@@ -96,14 +96,24 @@ Severity ladder for communicating problems:
 
 Never jump to the last row without passing through all previous rows.
 
-## 6. Skills to Use
+## 6. Planning Rule
+
+For tasks that require more than 3 steps, write a plan in `worklog.md` BEFORE writing code.
+
+- Tasks 1-3 steps: just do it, log after
+- Tasks 4-10 steps: write a brief plan in worklog, then execute
+- Tasks 10+ steps: write a detailed plan, show user for confirmation before starting
+
+See `instructions/writing-plans.md` for full details.
+
+## 7. Skills to Use
 
 | Skill | When to Use |
 |-------|-------------|
 | `git-safe-ops` | Before any git push/pull/rebase/merge with remote |
 | `dev-watchdog` | Starting, restarting, or checking dev server |
 
-## 7. Instructions to Follow
+## 8. Instructions to Follow
 
 | Instruction | File |
 |-------------|------|
@@ -111,6 +121,7 @@ Never jump to the last row without passing through all previous rows.
 | Git Workflow Rules | `instructions/git-workflow-rules.md` |
 | Language Rule | `instructions/language-rule.md` |
 | Diagnostic Disclosure | `instructions/diagnostic-disclosure.md` |
+| Writing Plans | `instructions/writing-plans.md` |
 
 ---
 

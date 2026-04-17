@@ -15,6 +15,7 @@ agent-toolkit/
     git-workflow-rules.md          - Git operation rules
     language-rule.md               - Language matching rule
     diagnostic-disclosure.md       - Data loss disclosure protocol
+    writing-plans.md                - Task planning before coding
   standards/                       - Code and documentation standards
     README_TEMPLATE.md             - Mandatory README structure
     MARKDOWN_STANDARD_RU_v2.0.md   - Markdown formatting rules
@@ -35,7 +36,7 @@ agent-toolkit/
 ### Option A: Bootstrap Script (always works, no git needed)
 
 Copy the content of `dist/setup.txt` and paste into any chat.
-The agent will create all 8 files from the embedded content.
+The agent will create all 9 files from the embedded content.
 No GitHub access, no PAT, no git required.
 
 Or run the script directly if you have the file:
@@ -56,6 +57,7 @@ instructions/
   git-workflow-rules.md
   language-rule.md
   diagnostic-disclosure.md
+  writing-plans.md
 skills/
   git-safe-ops/SKILL.md
   dev-watchdog/SKILL.md
@@ -126,6 +128,7 @@ See `skills/` for automated tooling.
 | git-workflow-rules | Backup before ops, force push over rebase |
 | language-rule | Match user's language, never switch |
 | diagnostic-disclosure | 5 verification steps before declaring data loss |
+| writing-plans | Plan before coding for tasks > 3 steps |
 
 ### Standards (code quality)
 
@@ -156,6 +159,7 @@ This toolkit was created from real incidents in Z.ai sandbox:
 
 ## Version
 
+v1.2.0 - Added writing-plans instruction (plan before code for tasks > 3 steps)
 v1.1.0 - Added development workflows (feature, bug-fix, refactor) + E2E templates
 v1.0.0 - Initial release from Web-Aesthetic-Showcase project
 

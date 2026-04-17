@@ -19,7 +19,7 @@ mkdir -p instructions
 mkdir -p skills/git-safe-ops
 mkdir -p skills/dev-watchdog
 
-echo "[1/8] Creating instructions/onboarding-protocol.md..."
+echo "[1/9] Creating instructions/onboarding-protocol.md..."
 cat > instructions/onboarding-protocol.md << 'EOF'
 # Onboarding Protocol
 
@@ -174,7 +174,7 @@ When a conversation is continued from a summary:
 Built with: Next.js 16 + TypeScript + Tailwind CSS
 EOF
 
-echo "[2/8] Creating instructions/git-workflow-rules.md..."
+echo "[2/9] Creating instructions/git-workflow-rules.md..."
 cat > instructions/git-workflow-rules.md << 'EOF'
 # Git Workflow Rules
 
@@ -256,7 +256,7 @@ After every git operation:
 | Unsure if code is lost | Check 5 diagnostic paths | Tell user "permanently lost" |
 EOF
 
-echo "[3/8] Creating instructions/language-rule.md..."
+echo "[3/9] Creating instructions/language-rule.md..."
 cat > instructions/language-rule.md << 'EOF'
 # Language Rule
 
@@ -305,7 +305,7 @@ At the start of each response, verify: "Am I writing in the same language as the
 If you catch yourself writing in the wrong language, stop and rewrite in the correct language before sending.
 EOF
 
-echo "[4/8] Creating instructions/diagnostic-disclosure.md..."
+echo "[4/9] Creating instructions/diagnostic-disclosure.md..."
 cat > instructions/diagnostic-disclosure.md << 'EOF'
 # Diagnostic Disclosure Rule
 
@@ -415,7 +415,126 @@ Never jump to the last row without passing through all previous rows.
 The second approach is honest, transparent, and gives the user actionable options.
 EOF
 
-echo "[5/8] Creating skills/git-safe-ops/SKILL.md..."
+echo "[5/9] Creating instructions/writing-plans.md..."
+cat > instructions/writing-plans.md << 'EOF'
+# Writing Plans
+
+## Instruction for AI Agent Behavior
+
+---
+
+## Rule: Plan Before You Code
+
+For any task that requires more than 3 steps, write a plan BEFORE writing code.
+
+The plan must be written into `worklog.md` as a structured checklist.
+This forces clear thinking, prevents rework, and creates a traceable record.
+
+---
+
+## When to Plan
+
+| Task Size | Action |
+|-----------|--------|
+| 1-3 steps (fix a typo, change a color) | Just do it, log after |
+| 4-10 steps (add a component, refactor a module) | Write a brief plan in worklog |
+| 10+ steps (new feature, multi-file change) | Write a detailed plan, show user before starting |
+
+## When NOT to Plan
+
+- User explicitly says "just do it" or "skip planning"
+- The fix is obvious and trivial (1-2 lines)
+- Cron/watchdog tasks (server restart, health check)
+- Onboarding steps (these follow a fixed protocol)
+
+---
+
+## Plan Format
+
+Write the plan at the top of your work session in `worklog.md`:
+
+```
+---
+Task ID: <id>
+Agent: <agent name>
+Task: <description>
+
+Plan:
+1. [step description]
+2. [step description]
+3. [step description]
+
+Work Log:
+- [actual work done, step by step]
+
+Stage Summary:
+- [results]
+```
+
+### Plan Checklist
+
+A good plan answers:
+
+- [ ] What files will be created or modified?
+- [ ] What is the order of operations?
+- [ ] Are there dependencies between steps?
+- [ ] What could go wrong and how to handle it?
+- [ ] Is there a rollback strategy?
+
+---
+
+## Plan Review
+
+For tasks with 10+ steps, present the plan to the user before starting:
+
+```
+Plan for: [task name]
+1. ...
+2. ...
+3. ...
+
+Should I proceed?
+```
+
+Wait for user confirmation before executing. This prevents wasted effort
+when the user's intent differs from your interpretation.
+
+For tasks with 4-9 steps, write the plan in worklog and start executing.
+No need to ask for confirmation unless you are unsure about the approach.
+
+---
+
+## Common Mistakes
+
+| Mistake | Why It's Bad | Fix |
+|---------|-------------|-----|
+| Start coding immediately on a complex task | You discover dependencies mid-way and have to restructure | Write 5-line plan first |
+| Write a 50-line plan for a simple task | Wastes context window and time | Scale plan to task complexity |
+| Plan but don't record it in worklog | Next session has no idea what was planned | Always write plans in worklog |
+| Ignore the plan after writing it | Plan becomes useless decoration | Follow the plan step by step |
+| Never revise the plan | New information may invalidate the plan | Update plan in worklog when reality changes |
+
+---
+
+## Relationship to Workflows
+
+This instruction complements the workflow templates:
+
+| Workflow | Planning Stage |
+|----------|---------------|
+| feature-development | Brainstorm + Plan phases (mandatory) |
+| bug-fix | Diagnose phase (identify fix before coding) |
+| refactor | Analyze + Plan phases (mandatory) |
+
+When using a workflow template, its planning phase takes precedence.
+This instruction applies to tasks that don't use a specific workflow.
+
+---
+
+Built with: Next.js 16 + TypeScript + Tailwind CSS
+EOF
+
+echo "[6/9] Creating skills/git-safe-ops/SKILL.md..."
 cat > skills/git-safe-ops/SKILL.md << 'EOF'
 ---
 name: git-safe-ops
@@ -552,7 +671,7 @@ Before ANY git operation involving remote:
 - [ ] Worklog.md updated with operation details
 EOF
 
-echo "[6/8] Creating skills/dev-watchdog/SKILL.md..."
+echo "[7/9] Creating skills/dev-watchdog/SKILL.md..."
 cat > skills/dev-watchdog/SKILL.md << 'EOF'
 ---
 name: dev-watchdog
@@ -662,7 +781,7 @@ The cron task handler should:
 | Port 3000 | Standard dev server port (mandatory, per project config) |
 EOF
 
-echo "[7/8] Creating templates/AGENT_RULES.md..."
+echo "[8/9] Creating templates/AGENT_RULES.md..."
 mkdir -p templates
 cat > templates/AGENT_RULES.md << 'EOF'
 # Agent Rules
@@ -763,14 +882,24 @@ Severity ladder for communicating problems:
 
 Never jump to the last row without passing through all previous rows.
 
-## 6. Skills to Use
+## 6. Planning Rule
+
+For tasks that require more than 3 steps, write a plan in `worklog.md` BEFORE writing code.
+
+- Tasks 1-3 steps: just do it, log after
+- Tasks 4-10 steps: write a brief plan in worklog, then execute
+- Tasks 10+ steps: write a detailed plan, show user for confirmation before starting
+
+See `instructions/writing-plans.md` for full details.
+
+## 7. Skills to Use
 
 | Skill | When to Use |
 |-------|-------------|
 | `git-safe-ops` | Before any git push/pull/rebase/merge with remote |
 | `dev-watchdog` | Starting, restarting, or checking dev server |
 
-## 7. Instructions to Follow
+## 8. Instructions to Follow
 
 | Instruction | File |
 |-------------|------|
@@ -778,13 +907,14 @@ Never jump to the last row without passing through all previous rows.
 | Git Workflow Rules | `instructions/git-workflow-rules.md` |
 | Language Rule | `instructions/language-rule.md` |
 | Diagnostic Disclosure | `instructions/diagnostic-disclosure.md` |
+| Writing Plans | `instructions/writing-plans.md` |
 
 ---
 
 Built with: Next.js 16 + TypeScript + Tailwind CSS
 EOF
 
-echo "[8/8] Creating templates/worklog.md..."
+echo "[9/9] Creating templates/worklog.md..."
 cat > templates/worklog.md << 'EOF'
 # Worklog
 
@@ -811,13 +941,14 @@ echo "========================================="
 echo "  SUCCESS!"
 echo "========================================="
 echo ""
-echo "Created 8 files in current directory:"
+echo "Created 9 files in current directory:"
 echo ""
 echo "  instructions/"
 echo "    onboarding-protocol.md"
 echo "    git-workflow-rules.md"
 echo "    language-rule.md"
 echo "    diagnostic-disclosure.md"
+echo "    writing-plans.md"
 echo "  skills/"
 echo "    git-safe-ops/SKILL.md"
 echo "    dev-watchdog/SKILL.md"
