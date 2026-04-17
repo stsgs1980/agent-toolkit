@@ -26,19 +26,61 @@ agent-toolkit/
 
 ## Quick Start
 
-### For New Project
+### Option A: Copy-Paste Commands (recommended)
 
-1. Copy entire `agent-toolkit/` to project root
-2. Copy `templates/AGENT_RULES.md` to project root
-3. Create `worklog.md` in project root
-4. Agent will auto-onboard via onboarding-protocol.md
+Run these commands from your project root:
 
-### For Existing Project
+```bash
+# 1. Clone toolkit to temp folder
+git clone https://github.com/Sts8987/agent-toolkit.git /tmp/agent-toolkit
 
-1. Copy `agent-toolkit/` to project root
-2. Copy `templates/AGENT_RULES.md` to project root
-3. Add "Agent Rules (Mandatory)" section to README.md
-4. Agent will detect and follow rules on next session
+# 2. Copy skills and instructions into project
+cp -r /tmp/agent-toolkit/skills/ ./skills/
+cp -r /tmp/agent-toolkit/instructions/ ./instructions/
+
+# 3. Copy template files to project root
+cp /tmp/agent-toolkit/templates/AGENT_RULES.md ./AGENT_RULES.md
+cp /tmp/agent-toolkit/templates/worklog.md ./worklog.md
+
+# 4. Copy standards (optional, for reference)
+mkdir -p upload
+cp /tmp/agent-toolkit/standards/* ./upload/
+
+# 5. Clean up
+rm -rf /tmp/agent-toolkit
+```
+
+### Option B: Copy Entire Folder
+
+```bash
+# Copy everything at once
+git clone https://github.com/Sts8987/agent-toolkit.git
+cp -r agent-toolkit/skills/ ./skills/
+cp -r agent-toolkit/instructions/ ./instructions/
+cp agent-toolkit/templates/AGENT_RULES.md ./
+cp agent-toolkit/templates/worklog.md ./
+rm -rf agent-toolkit
+```
+
+### After Setup
+
+1. Verify files exist: `ls AGENT_RULES.md instructions/ skills/ worklog.md`
+2. Add "Agent Rules (Mandatory)" section to your README.md (see template below)
+3. Commit everything: `git add -A && git commit -m "setup: add agent toolkit"`
+4. On next chat session the agent will auto-onboard via onboarding-protocol.md
+
+### README Section to Add
+
+```markdown
+## Agent Rules (Mandatory)
+
+Any AI agent working on this project MUST read and follow `AGENT_RULES.md`
+before performing any operations.
+
+See `AGENT_RULES.md` for full details.
+See `instructions/` for complete rule descriptions.
+See `skills/` for automated tooling.
+```
 
 ## What Each Component Does
 
