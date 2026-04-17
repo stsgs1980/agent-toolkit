@@ -1,219 +1,178 @@
 # Bug Fix Workflow
 
-## When to Use
+reproduce -> diagnose -> fix -> verify
 
 Use this workflow when fixing a bug, error, or unexpected behavior.
 
 ---
 
-## Phase 1: REPRODUCE (mandatory)
+## Phase 1: REPRODUCE
 
-Goal: confirm the bug exists and understand how to trigger it.
+Goal: confirm the bug exists and understand exact conditions.
 
 ### Steps
 
-1. **Ask the user for details**
-   - "What were you doing when it happened?"
-   - "What did you expect to happen?"
-   - "What actually happened?"
-   - "Can you share a screenshot or error message?"
+1. Ask user for details:
+   - What was expected?
+   - What actually happened?
+   - Steps to reproduce?
+   - Error message or screenshot?
 
-2. **Try to reproduce**
-   - Follow user's steps
+2. Try to reproduce:
+   - Follow user's steps exactly
+   - Check dev server logs: `tail -20 /tmp/zdev.log`
    - Check browser console for errors
-   - Check dev server logs (dev.log, /tmp/zdev.log)
-   - Check network tab for failed requests
+   - Note the exact conditions (page, state, input)
 
-3. **Classify the bug**
+3. Record reproduction:
 
-   | Category | Examples | Fix complexity |
-   |----------|----------|----------------|
-   | UI glitch | Wrong color, layout shift, missing style | Low |
-   | Runtime error | TypeError, undefined, null reference | Medium |
-   | Build error | TypeScript error, import missing | Low |
-   | Logic error | Wrong calculation, wrong state | Medium |
-   | Server error | 500, API route failure | High |
-   | Environment | .env missing, port conflict, DB error | Low |
+```
+Bug: [short description]
+Reproduction steps:
+  1. Go to /page
+  2. Click X
+  3. See error Y
+Expected: Z
+Actual: Y
+```
 
-4. **Record reproduction steps**
-   ```
-   Bug: [short description]
-   Steps to reproduce:
-   1. Open page /url
-   2. Click button X
-   3. Expected: Y happens
-   4. Actual: Z happens instead
-   Error: [paste error message if any]
-   ```
+### Skip Condition
 
-### Output
-
-- Reproduction steps documented
-- Bug classified
-- If cannot reproduce -> ask user for more details, DO NOT guess
+NEVER skip reproduction. If you cannot reproduce:
+- Ask user for more details
+- Check if it's environment-specific (mobile, browser, state)
+- Do NOT assume the bug and start fixing blindly
 
 ---
 
-## Phase 2: DIAGNOSE (mandatory)
+## Phase 2: DIAGNOSE
 
 Goal: find the root cause, not just the symptom.
 
 ### Steps
 
-1. **Read the relevant code**
-   - Start from where the error occurs
-   - Trace back to the source
-   - Check related files
+1. Read relevant source files (do NOT modify yet)
+2. Trace the code path from UI to data:
+   - Component -> handler -> API -> database
+3. Check common causes:
 
-2. **Form hypothesis**
-   ```
-   Hypothesis 1: Variable X is undefined because API returns null
-   Hypothesis 2: CSS class is missing because conditional is wrong
-   ```
+| Symptom | Common Cause | Check |
+|---------|-------------|-------|
+| White screen | Runtime error | Browser console, build log |
+| 500 error | Server crash | Dev server log, API route |
+| Stale data | Missing revalidation | Cache, fetch options |
+| Style broken | Missing CSS class | Tailwind classes, globals.css |
+| Form not working | Missing handler | Action/button handler |
 
-3. **Test hypothesis**
-   - Add console.log or check values
-   - Verify data flow
-   - Check edge cases
+4. Identify root cause (one sentence):
 
-4. **Find root cause**
-   ```
-   Root cause: The component renders before API data loads.
-   The loading state is not handled, so .map() is called on undefined.
-   ```
+```
+Root cause: [file:line] does X instead of Y because Z
+```
+
+5. Determine fix scope:
+   - One-liner: single line change
+   - Local: changes in 1 file
+   - Cross-module: changes in 2+ files
+   - Architectural: needs design change (escalate to user)
 
 ### Rules
 
-- Fix the ROOT CAUSE, not the symptom
-- Example:
-  - Symptom fix: `data?.map()` (adds optional chaining)
-  - Root cause fix: Add loading state, render skeleton while loading
-
-### Output
-
-- Root cause identified and documented in worklog.md
+- Read BEFORE write. Do not change code while diagnosing.
+- If diagnosis takes > 5 minutes, report progress to user.
+- If root cause is unclear, present 2-3 hypotheses and ask user.
 
 ---
 
-## Phase 3: FIX (mandatory)
+## Phase 3: FIX
 
-Goal: write the minimal fix that solves the root cause.
+Goal: apply minimal fix that addresses root cause.
 
 ### Steps
 
-1. **Plan the fix**
-   ```
-   Fix: Add loading state check before rendering data
-   Files to modify: src/components/data-list.tsx
-   ```
+1. Write the fix (minimal change principle):
+   - Change as few lines as possible
+   - Do NOT refactor while fixing (separate task)
+   - Do NOT add "bonus improvements"
 
-2. **Implement the fix**
-   - Make the MINIMAL change needed
-   - Do NOT refactor nearby code (separate task)
-   - Do NOT add features while fixing
+2. Verify fix locally:
+   - Lint: `bun run lint`
+   - Build: `bun run build`
+   - Reproduce original bug -> should be fixed
 
-3. **Verify the fix locally**
-   - Reproduce the bug -> should NOT reproduce now
-   - Test edge cases
-   - Run lint: `bun run lint`
-
-4. **Commit**
-   ```
-   git commit -m "fix: add loading state check in DataList component"
-   ```
-
-### Commit message format
+3. Commit with descriptive message:
 
 ```
-fix: <short description of what was fixed>
+fix: resolve [bug description]
+
+Root cause: [explanation]
+Fix: [what was changed]
 ```
 
-Examples:
-- `fix: handle undefined data in user profile component`
-- `fix: correct API route response type`
-- `fix: resolve layout overflow on mobile viewport`
+### Rules
 
-### Output
-
-- Bug fixed
-- Lint passes
-- Commit created
+- If fix is large (3+ files) -- break into smaller commits
+- If fix introduces new dependency -- justify to user first
+- If fix changes API behavior -- warn user about breaking changes
 
 ---
 
-## Phase 4: VERIFY (mandatory)
+## Phase 4: VERIFY
 
 Goal: confirm the fix works and nothing else broke.
 
-### Checklist
-
-```
-[ ] Bug no longer reproduces
-[ ] Edge cases tested
-[ ] bun run lint          - PASS
-[ ] bun run build         - PASS
-[ ] Other features still work (regression check)
-[ ] Committed and pushed
-[ ] worklog.md updated
-```
-
 ### Steps
 
-1. Test the original bug scenario -> should pass
-2. Test 2-3 related features -> should still work
-3. Run lint and build
-4. Push to remote
-5. Report to user:
-   ```
-   Bug fixed:
-   - Root cause: [description]
-   - Fix: [what was changed]
-   - Files: [list]
-   - Lint: PASS | Build: PASS
-   - Regression: no other features affected
-   ```
+1. Verify original bug is fixed (reproduce steps from Phase 1)
+2. Check for regressions:
+   - Does the page still load?
+   - Do other features on the same page still work?
+   - Is there a new console error?
+3. Run full QA:
 
-### If verification fails
+```
+Verify Results:
+- Original bug: FIXED
+- Lint: PASS
+- Build: PASS
+- Dev server: 200 OK
+- Regression check: PASS
+- New errors: NONE
+```
 
-- Revert the fix
-- Go back to Phase 2 (re-diagnose)
-- Do NOT push a fix that breaks other things
+4. Push to GitHub: `git push --force origin main`
+5. Update worklog.md with bug details and fix
 
 ---
 
-## Example: Full Workflow
+## Example Flow
 
 ```
-User: "The guestbook shows an error when I submit a message"
+User: "The guestbook form shows error on submit"
 
-Phase 1 REPRODUCE:
-  1. Opened / in browser
-  2. Typed message in guestbook form
-  3. Clicked submit
-  4. Got error: "TypeError: Cannot read property 'name' of undefined"
-  Category: Runtime error
+Agent Phase 1 (Reproduce):
+  - Go to / (guestbook section)
+  - Fill name and message
+  - Click submit
+  - See: "500 Internal Server Error" in console
+  - Log: "TypeError: Cannot read property 'push' of undefined"
 
-Phase 2 DIAGNOSE:
-  - Read guestbook component code
-  - Found: form calls /api/guestbook POST
-  - Checked API route: returns { success: true }
-  - Found: component tries to read response.data.name
-  - Root cause: API returns no data field, component expects it
+Agent Phase 2 (Diagnose):
+  - Read: src/app/page.tsx (guestbook handler)
+  - Read: src/app/api/guestbook/route.ts
+  - Root cause: Prisma client not initialized in API route
+  - Fix scope: Local (1 file)
 
-Phase 3 FIX:
-  - Fix: Update component to use response directly, not response.data.name
-  - File: src/app/page.tsx line 847
-  - Lint: 0 errors
-  - Commit: "fix: read guestbook response directly without nested data field"
+Agent Phase 3 (Fix):
+  - Add: import { db } from '@/lib/db'
+  - Add: await db.guestbook.create(...)
+  - Commit: "fix: initialize Prisma client in guestbook API"
 
-Phase 4 VERIFY:
-  - Bug no longer reproduces: PASS
-  - Guestbook shows new message after submit: PASS
-  - Other styles still work: PASS
-  - Lint: PASS | Build: PASS
-  - Pushed: yes
+Agent Phase 4 (Verify):
+  - Submit form -> works
+  - Other page features -> OK
+  - Push to GitHub
 ```
 
 ---
-
 Built with: Next.js 16 + TypeScript + Tailwind CSS

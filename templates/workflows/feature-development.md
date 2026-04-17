@@ -1,212 +1,168 @@
 # Feature Development Workflow
 
-## When to Use
+brainstorm -> plan -> implement -> QA
 
-Use this workflow when building a NEW feature, component, or page.
-
-Skip brainstorm for trivial tasks (fix a typo, change a color).
-Skip brainstorm for tasks the user described in full detail.
+Use this workflow when building a new feature, page, component, or integration.
 
 ---
 
-## Phase 1: BRAINSTORM (skip for simple tasks)
+## Phase 1: BRAINSTORM
 
 Goal: understand what the user wants and propose approaches.
 
 ### Steps
 
-1. **Clarify requirements**
-   - Ask: "What should this feature do?"
-   - Ask: "Who will use it?"
-   - Ask: "Any specific design preferences?"
+1. Ask the user to describe the feature in their own words
+2. Clarify ambiguous requirements (ask questions, not assumptions)
+3. Propose 2-3 approaches with pros/cons:
 
-2. **Propose approaches**
-   - Give 2-3 options with pros/cons
-   - Example:
-     ```
-     Option A: shadcn/ui Dialog component
-       + Accessible, tested, consistent
-       - Requires dialog state management
+| Approach | Pros | Cons |
+|----------|------|------|
+| A | ... | ... |
+| B | ... | ... |
 
-     Option B: Custom modal with CSS animation
-       + Full control over animation
-       - Need to handle a11y manually
-     ```
+4. User picks an approach (or combines elements)
 
-3. **User picks approach**
-   - Never proceed without user confirmation
+### Skip Condition
 
-### Output
-
-- User's confirmed choice recorded in worklog.md
+Skip brainstorm ONLY if:
+- Task is trivial (change a color, add a text, fix a typo)
+- User already provided exact specification
 
 ---
 
-## Phase 2: PLAN (mandatory for all features)
+## Phase 2: PLAN
 
-Goal: define exact files, order, and risks before writing code.
+Goal: create a detailed implementation plan before writing code.
 
 ### Steps
 
-1. **List files to create/modify**
-   ```
-   Files to create:
-   - src/components/feature-name.tsx
-   - src/app/api/feature/route.ts
+1. List all files to create or modify:
 
-   Files to modify:
-   - src/app/page.tsx (add import)
-   ```
+```
+CREATE: src/app/new-page/page.tsx
+CREATE: src/components/new-feature.tsx
+MODIFY: src/app/layout.tsx (add import)
+MODIFY: src/lib/utils.ts (add helper)
+```
 
-2. **Define implementation order**
-   ```
-   1. Create API route (backend)
-   2. Create component (frontend)
-   3. Integrate into page
-   4. Add responsive styles
-   ```
+2. Define implementation order (dependencies first):
+   - Step 1: create utility/helper
+   - Step 2: create component
+   - Step 3: integrate into page
+   - Step 4: add styles
 
-3. **Identify risks**
-   ```
-   Risks:
-   - Database migration needed? No
-   - Breaking existing functionality? No
-   - External dependencies? No
-   ```
+3. Identify risks:
+   - Breaking existing functionality?
+   - New dependencies needed?
+   - Database schema changes?
+   - API changes?
 
-4. **Write plan to worklog.md**
-   ```
-   ---
-   Task: Add user profile feature
-   Plan:
-   - 1. Create /api/profile route (GET, PUT)
-   - 2. Create ProfileCard component
-   - 3. Add to dashboard page
-   Risks: None
-   ```
+4. Estimate scope:
+   - Small: 1-2 files, < 100 lines
+   - Medium: 3-5 files, 100-500 lines
+   - Large: 5+ files, 500+ lines (consider splitting into sub-tasks)
 
-5. **Get user confirmation**
-   - Show plan, ask: "Proceed?"
+5. Write plan to worklog.md
+6. Show plan to user and get confirmation
 
-### Output
+### Skip Condition
 
-- Plan in worklog.md
-- User confirmation
+NEVER skip planning for medium or large tasks.
+Small tasks: mental plan is OK, just list files before coding.
 
 ---
 
 ## Phase 3: IMPLEMENT
 
-Goal: write code following the plan exactly.
+Goal: write code according to the plan, commit often.
 
 ### Steps
 
-1. **Work in planned order**
-   - Do NOT skip steps
-   - Do NOT add unplanned features
+1. Create/modify files in the planned order
+2. Run lint after each logical unit: `bun run lint`
+3. Commit after each logical unit with descriptive message:
 
-2. **Commit after each logical unit**
-   ```
-   git add src/app/api/profile/route.ts
-   git commit -m "feat(profile): add API route"
-   ```
+```
+feat: add user avatar component
+feat: integrate avatar into header
+style: add avatar hover animation
+```
 
-3. **Run lint after each commit**
-   ```
-   bun run lint
-   ```
-
-4. **Keep user informed**
-   - Report progress: "Step 2/4 done"
-   - Report blockers immediately
+4. If deviating from plan -- update worklog.md with reason
+5. If blocked -- report to user immediately, do not guess
 
 ### Rules
 
-- If plan needs to change -> go back to Phase 2 (update plan, confirm)
-- If you discover a bug -> note it, fix later (don't lose focus)
-- If user changes requirements -> restart from Phase 1
-
-### Output
-
-- Code files created/modified
-- Git commits with semantic messages
+- Follow AGENT_RULES.md at all times
+- Follow No-Unicode Policy for all new code
+- Use shadcn/ui components when possible
+- TypeScript strict typing for all new code
 
 ---
 
 ## Phase 4: QA
 
-Goal: verify everything works before reporting "done".
-
-### Checklist
-
-```
-[ ] bun run lint          - No errors
-[ ] bun run build         - Builds successfully
-[ ] Manual test           - Feature works in browser
-[ ] Responsive test       - Works on mobile (375px) and desktop (1920px)
-[ ] No console errors     - Check browser dev tools
-[ ] No forbidden Unicode  - Check new files
-[ ] Git committed         - All changes committed
-[ ] Git pushed            - Changes pushed to remote
-```
+Goal: verify the feature works correctly.
 
 ### Steps
 
-1. Run lint
-2. Run build
-3. Test in browser (via Preview Panel)
-4. Report results:
-   ```
-   Feature complete:
-   - lint: PASS
-   - build: PASS
-   - manual test: PASS
-   - commits: feat(profile): add API route, feat(profile): add ProfileCard
-   - pushed: yes
-   ```
+1. Lint: `bun run lint`
+2. Build: `bun run build`
+3. Dev server health check: `curl http://127.0.0.1:3000`
+4. Manual verification:
+   - Does the feature render correctly?
+   - Does it work on mobile viewport?
+   - Are there console errors?
+   - Does it break existing features?
 
-### If QA fails
+5. Report results to user:
 
-- Fix the issue
-- Re-run failed checks
-- Do NOT report "done" until all checks pass
+```
+QA Results:
+- Lint: PASS
+- Build: PASS
+- Dev server: 200 OK
+- Visual check: PASS
+- Mobile check: PASS
+- Console errors: NONE
+```
+
+6. If any check fails -- fix and re-run QA
+
+### After QA Pass
+
+- Push to GitHub: `git push --force origin main`
+- Update worklog.md with final summary
 
 ---
 
-## Example: Full Workflow
+## Example Flow
 
 ```
-User: "I want a dark mode toggle"
+User: "Add a dark mode toggle"
 
-Phase 1 BRAINSTORM:
-  Option A: next-themes library
-    + Handles system preference, SSR, flash prevention
-    - Extra dependency
-  Option B: Custom context + localStorage
-    + No extra dependency
-    - Need to handle SSR flash manually
-  User picks: Option A
+Agent Phase 1 (Brainstorm):
+  - Propose: A) CSS toggle, B) next-themes, C) system preference only
+  - User picks B
 
-Phase 2 PLAN:
-  Files to create: src/components/theme-toggle.tsx
-  Files to modify: src/app/layout.tsx (add ThemeProvider)
-  Order: 1. layout.tsx, 2. theme-toggle.tsx, 3. integrate
-  Risks: None
-  User confirms: yes
+Agent Phase 2 (Plan):
+  - Files: layout.tsx, theme-provider.tsx, header.tsx
+  - Order: provider -> header -> layout
+  - Risks: existing styles may need adjustment
+  - Written to worklog.md
 
-Phase 3 IMPLEMENT:
-  [1/3] Modified layout.tsx - added ThemeProvider
-  [2/3] Created theme-toggle.tsx - sun/moon icon toggle
-  [3/3] Integrated into header
-  Lint: 0 errors
+Agent Phase 3 (Implement):
+  - bun add next-themes
+  - Create theme-provider.tsx
+  - Add toggle to header
+  - Commit each step
 
-Phase 4 QA:
-  lint: PASS
-  build: PASS
-  manual: toggle works, persists on refresh
-  pushed: yes
+Agent Phase 4 (QA):
+  - Lint: PASS, Build: PASS, Server: 200
+  - Visual: toggle works, persists on reload
+  - Push to GitHub
 ```
 
 ---
-
 Built with: Next.js 16 + TypeScript + Tailwind CSS
