@@ -77,8 +77,8 @@ After every git operation, log to `worklog.md`: operation, hash before/after, re
 
 ## 4. Code Standards
 
-- No-Unicode Policy v2.0 [C] - zero non-Cyrillic non-ASCII in UI code
-- MARKDOWN_STANDARD v2.0 [W] - ASCII + Cyrillic only in .md files
+- No-Unicode Policy v2.1 [C] - zero non-Cyrillic non-ASCII in UI code
+- MARKDOWN_STANDARD v2.1 [W] - ASCII + Cyrillic + typographics in .md text, forbidden in headings/code
 - REPRODUCIBILITY-STANDARD - `.env.example` required, relative paths only
 - Use shadcn/ui components, do not build from scratch
 - TypeScript throughout with strict typing

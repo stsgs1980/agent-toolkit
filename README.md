@@ -18,8 +18,9 @@ agent-toolkit/
     writing-plans.md                - Task planning before coding
   standards/                       - Code and documentation standards
     README_TEMPLATE.md             - Mandatory README structure
-    MARKDOWN_STANDARD_RU_v2.0.md   - Markdown formatting rules
-    No-Unicode_Policy_v2.0.md      - Unicode restrictions
+    MARKDOWN_STANDARD_RU_v2.1.md   - Markdown formatting rules (Russian)
+    MARKDOWN_STANDARD_EN_v2.1.md   - Markdown formatting rules (English)
+    No-Unicode_Policy_v2.1.md      - Unicode restrictions
     REPRODUCIBILITY-STANDARD.md    - Build reproducibility rules
   templates/                       - Files to copy into new projects
     AGENT_RULES.md                 - Master rules file (copy and adapt)
@@ -135,7 +136,7 @@ See `skills/` for automated tooling.
 | Standard | Purpose |
 |----------|---------|
 | README_TEMPLATE | Mandatory README sections (12 total) |
-| MARKDOWN_STANDARD | ASCII + Cyrillic only, no Unicode |
+| MARKDOWN_STANDARD | ASCII + Cyrillic + typographics in text, strict in headings/code |
 | No-Unicode_Policy | Zero non-Cyrillic non-ASCII in production code |
 | REPRODUCIBILITY-STANDARD | .env.example, relative paths only |
 
@@ -159,6 +160,7 @@ This toolkit was created from real incidents in Z.ai sandbox:
 
 ## Version
 
+v1.2.1 - Updated standards to v2.1 (typographics allowed in text, EN standard added)
 v1.2.0 - Added writing-plans instruction (plan before code for tasks > 3 steps)
 v1.1.0 - Added development workflows (feature, bug-fix, refactor) + E2E templates
 v1.0.0 - Initial release from Web-Aesthetic-Showcase project

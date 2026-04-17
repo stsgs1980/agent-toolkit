@@ -1,8 +1,12 @@
-# Стандарт: No-Unicode Policy v2.0
+### Файл 1: No-Unicode Policy v2.1.md
+*(Что изменилось: обновлены ссылки на Markdown Standard, исправлена регулярка для уровня [I], добавлено пояснение про типографику для уровня [W], подпись стека ограничена корневыми файлами).*
+
+```markdown
+# Стандарт: No-Unicode Policy v2.1
 
 > Стандарт использования символов, иконок и графики. Уровень Design System / Engineering Governance.
 >
-> **Связанный документ:** MARKDOWN_STANDARD v2.0 (уровень [W]) — для README и документации
+> **Связанный документ:** MARKDOWN_STANDARD v2.1 (уровень [W]) — для README и документации
 
 ---
 
@@ -23,8 +27,8 @@
 
 | Документ | Уровень | Область применения |
 |----------|---------|-------------------|
-| **No-Unicode Policy v2.0** (этот документ) | [C] Critical, [I] Info | UI, продакшн-код, прототипы |
-| **MARKDOWN_STANDARD v2.0** | [W] Warning | README.md, документация проекта |
+| **No-Unicode Policy v2.1** (этот документ) | [C] Critical, [I] Info | UI, продакшн-код, прототипы |
+| **MARKDOWN_STANDARD v2.1** | [W] Warning | README.md, документация проекта |
 
 ---
 
@@ -203,11 +207,15 @@ text.replace(/[\u{1F000}-\u{1FFFF}]|[\u{2600}-\u{27BF}]|[\u{FE00}-\u{FEFF}]|[\u{
 ### 8.3. Финальная санитизация
 
 ```javascript
-// Для [C] уровня - только ASCII + кириллица
+// Для [C] уровня (код/UI) - только ASCII + кириллица (типографика строго запрещена)
 text.replace(/[^\x20-\x7E\u0400-\u04FF]/g, '')
 
 // Для [I] уровня - с whitelist для диаграмм
-text.replace(/[^\x20-\x7E\u0400-\u04FF\-\>\<\=\|\+\^v]/g, '')
+// Примечание: 'v' удалена из явного перечисления, так как входит в базовый диапазон ASCII \x20-\x7E
+text.replace(/[^\x20-\x7E\u0400-\u04FF\-\>\<\=\|\+\^]/g, '')
+
+// ВНИМАНИЕ: Уровень [W] (документация) регулируется MARKDOWN_STANDARD v2.1.
+// Там типографские символы (—, –, °, ©) РАЗРЕШЕНЫ в обычном тексте, поэтому данная жесткая санитизация к .md файлам не применяется.
 ```
 
 ---
@@ -346,13 +354,13 @@ module.exports = {
 
 ### Для документации [W]:
 
-- [ ] См. MARKDOWN_STANDARD v2.0
+- [ ] См. MARKDOWN_STANDARD v2.1
 
 ---
 
 ## 14. Формат подписи стека
 
-- Размещение: правый нижний угол
+- Размещение: правый нижний угол (только для корневых `README.md` и `CHANGELOG.md`)
 - Формат: `Built with: Next.js 16 + TypeScript + Tailwind CSS`
 - Разрешено: латиница, кириллица, цифры, знаки + и :
 - Запрещено: эмодзи, Unicode-графика
@@ -365,10 +373,168 @@ module.exports = {
 |--------|------|-----------|
 | 1.0 | 2024-Q4 | Первоначальная версия, абсолютный запрет |
 | 2.0 | 2025-01 | Уровневый подход, whitelist, fallback-стратегия, связь с MARKDOWN_STANDARD, правила оформления кода |
+| 2.1 | 2025-01 | Синхронизация с MARKDOWN_STANDARD v2.1 (допуск типографики в тексте для [W], исправление regex для диаграмм, уточнение подписи стека) |
 
 ---
 
-**Документ соответствует стандарту No-Unicode Policy v2.0**
+**Документ соответствует стандарту No-Unicode Policy v2.1**
 
 ---
 Built with: Next.js 16 + TypeScript + Tailwind CSS
+```
+
+---
+---
+
+### 📄 Файл 2: README_TEMPLATE.md
+*(Что изменилось: в чеклисте и примерах внизу документа длинное тире `—` теперь разрешено в тексте списков, но явно запрещено в заголовках).*
+
+```markdown
+# README_TEMPLATE.md
+
+This template defines the mandatory structure for all project README files.
+
+## Mandatory Sections
+
+Every README.md must contain the following sections in order:
+
+| # | Section | Required | Description |
+|---|---------|----------|-------------|
+| 1 | Title + Description | Yes | Project name and brief description |
+| 2 | Badges | Optional | Technology badges (SVG only) |
+| 3 | Features | Yes | Key capabilities |
+| 4 | Tech Stack | Yes | Technologies used |
+| 5 | Getting Started | Yes | Installation and run instructions |
+| 6 | Configuration | Optional | Environment variables, settings |
+| 7 | Project Structure | Optional | Directory layout |
+| 8 | API Reference | Optional | Endpoints, methods |
+| 9 | Scripts | Optional | NPM/Bun commands |
+| 10 | Development Rules | Optional | Code style, technology constraints |
+| 11 | Agent Rules | Conditional | Required if `AGENT_RULES.md` exists in project root |
+| 12 | Stack Signature | Yes | Mandatory footer |
+
+## Template
+
+```markdown
+# Project Name
+
+Brief description of the project (1-2 sentences).
+
+![Badge](https://img.shields.io/badge/Tech-Version-color?style=flat-square)
+
+## Features
+
+- Feature 1 - description
+- Feature 2 - description
+- Feature 3 - description
+
+## Tech Stack
+
+- **Framework** - description
+- **Language** - description
+- **Database** - description
+- **Other** - description
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ or Bun
+- Other requirements
+
+### Installation
+
+```bash
+# Install dependencies
+bun install
+
+# Configure environment
+cp .env.example .env
+
+# Setup database
+bun run db:push
+
+# Run development server
+bun run dev
+```
+
+## Scripts
+
+| Script | Description |
+|--------|-------------|
+| `bun run dev` | Development server |
+| `bun run build` | Production build |
+| `bun run lint` | Lint check |
+
+## Project Structure
+
+- `src/app/` - Application routes
+- `src/components/` - UI components
+- `src/lib/` - Utilities
+- `prisma/` - Database schema
+
+## Configuration
+
+### Environment Variables
+
+See `.env.example`:
+
+```env
+DATABASE_URL="file:./db/dev.db"
+```
+
+## Development Rules
+
+### Required Technologies
+- Technology 1
+- Technology 2
+
+### Code Style
+- Rule 1
+- Rule 2
+
+## Agent Rules (Mandatory)
+
+Any AI agent working on this project MUST read and follow `AGENT_RULES.md`
+before performing any operations.
+
+See `AGENT_RULES.md` for full details.
+See `instructions/` for complete rule descriptions.
+See `skills/` for automated tooling.
+
+---
+Built with: Next.js 16 + TypeScript + Tailwind CSS
+```
+
+## Checklist
+
+Before submitting, verify:
+
+- [ ] No emoji in title or sections
+- [ ] No Unicode arrows (`->`, `=>`)
+- [ ] No em dash in headings or code (use hyphen `-`)
+- [ ] No pseudo-graphics for tree structures
+- [ ] Stack Signature present at end
+- [ ] All mandatory sections included
+- [ ] Agent Rules section present if AGENT_RULES.md exists
+- [ ] Code blocks have language specified
+
+## Example Compliance
+
+### Correct
+```markdown
+## Features
+- Fast build - uses Turbopack
+- Type safe — full TypeScript
+```
+
+### Incorrect
+```markdown
+## Features
+- Fast build -> uses Turbopack
+## Features — Core (em dash in heading is prohibited)
+```
+
+---
+Built with: Next.js 16 + TypeScript + Tailwind CSS
+```

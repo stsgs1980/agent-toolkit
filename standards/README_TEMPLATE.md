@@ -120,7 +120,7 @@ Before submitting, verify:
 
 - [ ] No emoji in title or sections
 - [ ] No Unicode arrows (`->`, `=>`)
-- [ ] No em dash (`-` - use hyphen)
+- [ ] No em dash in headings or code (use hyphen `-`)
 - [ ] No pseudo-graphics for tree structures
 - [ ] Stack Signature present at end
 - [ ] All mandatory sections included
@@ -133,15 +133,16 @@ Before submitting, verify:
 ```markdown
 ## Features
 - Fast build - uses Turbopack
-- Type safe - full TypeScript
+- Type safe — full TypeScript
 ```
 
 ### Incorrect
 ```markdown
 ## Features
 - Fast build -> uses Turbopack
-- Type safe — full TypeScript
+## Features — Core (em dash in heading is prohibited)
 ```
 
 ---
 Built with: Next.js 16 + TypeScript + Tailwind CSS
+
