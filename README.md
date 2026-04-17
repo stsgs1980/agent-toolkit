@@ -22,6 +22,12 @@ agent-toolkit/
     REPRODUCIBILITY-STANDARD.md    - Build reproducibility rules
   templates/                       - Files to copy into new projects
     AGENT_RULES.md                 - Master rules file (copy and adapt)
+    workflows/                     - Development workflows
+      feature-development.md       - New feature: brainstorm -> plan -> implement -> QA
+      bug-fix.md                   - Bug fix: reproduce -> diagnose -> fix -> verify
+      refactor.md                  - Refactor: analyze -> plan -> refactor -> verify
+    e2e/                            - E2E test templates (Playwright)
+    playwright.config.ts           - Playwright configuration
 ```
 
 ## Quick Start
@@ -109,6 +115,14 @@ See `skills/` for automated tooling.
 | No-Unicode_Policy | Zero non-Cyrillic non-ASCII in production code |
 | REPRODUCIBILITY-STANDARD | .env.example, relative paths only |
 
+### Workflows (development process)
+
+| Workflow | When to Use | Phases |
+|----------|-------------|--------|
+| feature-development | New feature or component | Brainstorm -> Plan -> Implement -> QA |
+| bug-fix | Fixing a bug or error | Reproduce -> Diagnose -> Fix -> Verify |
+| refactor | Improving code structure | Analyze -> Plan -> Refactor -> Verify |
+
 ## Problem History
 
 This toolkit was created from real incidents in Z.ai sandbox:
@@ -121,6 +135,7 @@ This toolkit was created from real incidents in Z.ai sandbox:
 
 ## Version
 
+v1.1.0 - Added development workflows (feature, bug-fix, refactor) + E2E templates
 v1.0.0 - Initial release from Web-Aesthetic-Showcase project
 
 ---
