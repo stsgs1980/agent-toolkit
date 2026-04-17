@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check file structure
+        run: |
+          echo "Checking required files..."
+          MISSING=0
+          for f in skills/git-safe-ops/SKILL.md skills/dev-watchdog/SKILL.md; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            fi
+          done
+          for f in instructions/*.md; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            fi
+          done
+          for f in templates/AGENT_RULES.md templates/worklog.md; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            fi
+          done
+          for f in standards/README_TEMPLATE.md; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            fi
+          done
+          exit $MISSING
+
+      - name: Unicode check (no forbidden characters in .md)
+        run: |
+          echo "Checking for forbidden Unicode in markdown files..."
+          FAIL=0
+          # Check for emoji, arrows, dashes in .md files
+          # Allowed: ASCII, Cyrillic (U+0400-U+04FF), markdown formatting chars
+          for f in $(find . -name '*.md' -not -path './.git/*'); do
+            # Check for emoji (U+1F000+)
+            if rg -l '[\x{1F000}-\x{1FFFF}]' "$f" 2>/dev/null; then
+              echo "FOUND emoji in: $f"
+              FAIL=1
+            fi
+            # Check for unicode arrows
+            if rg -l '[\x{2190}-\x{21FF}]' "$f" 2>/dev/null; then
+              echo "FOUND unicode arrows in: $f"
+              FAIL=1
+            fi
+            # Check for em dash
+            if rg -l '\x{2014}' "$f" 2>/dev/null; then
+              echo "FOUND em dash in: $f"
+              FAIL=1
+            fi
+            # Check for right arrow
+            if rg -l '\x{2192}' "$f" 2>/dev/null; then
+              echo "FOUND right arrow in: $f"
+              FAIL=1
+            fi
+          done
+          exit $FAIL
+
+      - name: Check Stack Signature footer
+        run: |
+          echo "Checking Stack Signature in all .md files..."
+          FAIL=0
+          for f in $(find . -name '*.md' -not -path './.git/*'); do
+            if ! tail -1 "$f" | grep -q 'Built with:'; then
+              # Skip README.md for agent-toolkit (it has its own footer)
+              if [ "$(basename "$f")" != "README.md" ]; then
+                echo "NO Stack Signature in: $f"
+                FAIL=1
+              fi
+            fi
+          done
+          exit $FAIL
+
+      - name: Check YAML syntax (workflows)
+        run: |
+          if command -v python3 &>/dev/null; then
+            python3 -c "import yaml; [yaml.safe_load(open(f)) for f in __import__('glob').glob('.github/workflows/*.yml')]"
+            echo "YAML syntax OK"
+          fi
