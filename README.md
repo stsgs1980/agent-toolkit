@@ -2,7 +2,7 @@
 
 **Standards + Skills + Rules** for AI-driven development
 
-> Toolkit version: **v1.4.0**
+> Toolkit version: **v1.4.1**
 
 ---
 
@@ -207,6 +207,37 @@ After copying the toolkit to your project, edit **`PROJECT_CONFIG.md`**:
 
 ---
 
+## Readiness Checklist
+
+What you get after importing this toolkit, and what still needs manual setup.
+
+### Works out of the box
+
+When `AGENT_RULES.md` is connected as agent instructions / system prompt:
+
+- **Behavioral rules** -- file handling, formatting, No-Unicode, reproducibility are all defined
+- **Standard references** -- agent knows MARKDOWN_STANDARD, No-Unicode Policy, REPRODUCIBILITY exist and where to find them
+- **Onboarding protocol** -- agent reads required files on session start
+- **Document classification** -- Group A / Group B hierarchy is understood
+- **Git safety** -- backup before rewrite, force-push over rebase, panic diagnostics ladder
+
+### Requires one-time setup per project
+
+| Action | Time | Details |
+|--------|------|---------|
+| Edit `PROJECT_CONFIG.md` | 2-3 min | Stack signature, dev server command, project paths |
+| Copy `WORKLOG.md` to project root | 10 sec | `cp templates/WORKLOG.md your-project/worklog.md` |
+| Copy `TASK_TEMPLATE.md` to project root | 10 sec | `cp templates/TASK_TEMPLATE.md your-project/` |
+
+### Known limitations
+
+| Issue | Impact | Priority |
+|-------|--------|----------|
+| `setup.sh` not yet tested against current file structure | Templates copied manually | Medium |
+| 2 minor cross-document inconsistencies (v2.1 vs v2.1.4 in headers, absolute paths in templates) | Does not affect agent behavior | Low |
+
+---
+
 ## License
 
 This toolkit is provided as-is for use with AI-driven development workflows.
@@ -217,7 +248,8 @@ This toolkit is provided as-is for use with AI-driven development workflows.
 
 | Version | Changes |
 |---------|---------|
-| **v1.4.0** | Unified toolkit: AGENT_RULES rewritten, PROJECT_CONFIG.md added, README overhauled, No-Unicode levels synced [C]+[W]+[I], REPRODUCIBILITY classified as Group B, real PNG images |
+| **v1.4.1** | Added Readiness Checklist section to README |
+| **v1.4.0** | Unified toolkit: AGENT_RULES rewritten, PROJECT_CONFIG.md added, README overhauled, No-Unicode levels synced [C]+[W]+[I], REPRODUCIBILITY classified as Group B |
 | v1.3.0 | Added logos (assets/), worklog system, Implementation Order (6-step sequence), parameterized stack signature, AI-chat in No-Unicode Policy, `(ref)` exception for code blocks |
 | v1.2.1 | Updated standards to v2.1 (typographics allowed in text, EN standard added) |
 | v1.2.0 | Added writing-plans instruction (plan before code for tasks > 3 steps) |
