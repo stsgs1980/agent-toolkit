@@ -215,4 +215,17 @@ This toolkit is provided as-is for use with AI-driven development workflows.
 
 ---
 
+## Changelog
+
+| Version | Changes |
+|---------|---------|
+| **v1.4.0** | Unified toolkit: AGENT_RULES rewritten, PROJECT_CONFIG.md added, README overhauled, No-Unicode levels synced [C]+[W]+[I], REPRODUCIBILITY classified as Group B, real PNG images |
+| v1.3.0 | Added logos (assets/), worklog system, Implementation Order (6-step sequence), parameterized stack signature, AI-chat in No-Unicode Policy, `(ref)` exception for code blocks |
+| v1.2.1 | Updated standards to v2.1 (typographics allowed in text, EN standard added) |
+| v1.2.0 | Added writing-plans instruction (plan before code for tasks > 3 steps) |
+| v1.1.0 | Added development workflows (feature, bug-fix, refactor) + E2E templates |
+| v1.0.0 | Initial release from Web-Aesthetic-Showcase project |
+
+---
+
 Built with: Next.js 16 + TypeScript + Tailwind CSS
