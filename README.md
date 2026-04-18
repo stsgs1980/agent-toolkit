@@ -27,10 +27,10 @@ It solves three problems:
 git clone https://github.com/Sts8987/agent-toolkit.git
 
 # Copy standards and templates to your project
-cp -r agent-toolkit/standards/  your-project/standards/
-cp -r agent-toolkit/templates/  your-project/templates/
+cp -r agent-toolkit/standards/    your-project/standards/
+cp -r agent-toolkit/templates/    your-project/templates/
 cp -r agent-toolkit/instructions/ your-project/instructions/
-cp agent-toolkit/AGENT_RULES.md   your-project/
+cp agent-toolkit/AGENT_RULES.md    your-project/
 cp agent-toolkit/PROJECT_CONFIG.md your-project/
 
 # Edit PROJECT_CONFIG.md for your stack
@@ -111,9 +111,7 @@ agent-toolkit/
     git-safe-ops/             Safe git push/pull/rebase
     dev-watchdog/             Dev server management
 
-  assets/                     Visual assets
-    logo.png
-    favicon.png
+
 ```
 
 ---
