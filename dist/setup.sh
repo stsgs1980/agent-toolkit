@@ -19,8 +19,8 @@ mkdir -p instructions
 mkdir -p skills/git-safe-ops
 mkdir -p skills/dev-watchdog
 
-echo "[1/9] Creating instructions/onboarding-protocol.md..."
-cat > instructions/onboarding-protocol.md << 'EOF'
+echo "[1/11] Creating instructions/onboarding-protocol.md..."
+cat > instructions/onboarding-protocol.md << 'EOF1'
 # Onboarding Protocol
 
 ## Instruction for AI Agent Behavior
@@ -172,10 +172,10 @@ When a conversation is continued from a summary:
 ---
 
 Built with: Next.js 16 + TypeScript + Tailwind CSS
-EOF
+EOF1
 
-echo "[2/9] Creating instructions/git-workflow-rules.md..."
-cat > instructions/git-workflow-rules.md << 'EOF'
+echo "[2/11] Creating instructions/git-workflow-rules.md..."
+cat > instructions/git-workflow-rules.md << 'EOF2'
 # Git Workflow Rules
 
 ## Instruction for AI Agent Behavior
@@ -254,10 +254,10 @@ After every git operation:
 | Before any rebase/merge | Backup files first | Operate without backup |
 | Environment blocked by conflict | Force unlock from /tmp | Try `git rebase --continue` |
 | Unsure if code is lost | Check 5 diagnostic paths | Tell user "permanently lost" |
-EOF
+EOF2
 
-echo "[3/9] Creating instructions/language-rule.md..."
-cat > instructions/language-rule.md << 'EOF'
+echo "[3/11] Creating instructions/language-rule.md..."
+cat > instructions/language-rule.md << 'EOF3'
 # Language Rule
 
 ## Instruction for AI Agent Behavior
@@ -275,7 +275,7 @@ cat > instructions/language-rule.md << 'EOF'
 - If the user writes in Russian (Cyrillic characters) -> respond in Russian
 - If the user writes in English (Latin characters) -> respond in English
 - If the user writes in a mix -> respond in the language of the majority of their message
-- If ambiguous -> ask: "На каком языке вам удобнее продолжить?" / "Which language do you prefer?"
+- If ambiguous -> ask: "Na kakom yazyke vam udobnee prodolzhit?" / "Which language do you prefer?"
 
 ### What This Applies To
 
@@ -303,10 +303,10 @@ cat > instructions/language-rule.md << 'EOF'
 At the start of each response, verify: "Am I writing in the same language as the user's last message?"
 
 If you catch yourself writing in the wrong language, stop and rewrite in the correct language before sending.
-EOF
+EOF3
 
-echo "[4/9] Creating instructions/diagnostic-disclosure.md..."
-cat > instructions/diagnostic-disclosure.md << 'EOF'
+echo "[4/11] Creating instructions/diagnostic-disclosure.md..."
+cat > instructions/diagnostic-disclosure.md << 'EOF4'
 # Diagnostic Disclosure Rule
 
 ## Instruction for AI Agent Behavior
@@ -413,10 +413,10 @@ Never jump to the last row without passing through all previous rows.
 > may still contain the commits. Can you try starting from the same session?"
 
 The second approach is honest, transparent, and gives the user actionable options.
-EOF
+EOF4
 
-echo "[5/9] Creating instructions/writing-plans.md..."
-cat > instructions/writing-plans.md << 'EOF'
+echo "[5/11] Creating instructions/writing-plans.md..."
+cat > instructions/writing-plans.md << 'EOF5'
 # Writing Plans
 
 ## Instruction for AI Agent Behavior
@@ -532,10 +532,10 @@ This instruction applies to tasks that don't use a specific workflow.
 ---
 
 Built with: Next.js 16 + TypeScript + Tailwind CSS
-EOF
+EOF5
 
-echo "[6/9] Creating skills/git-safe-ops/SKILL.md..."
-cat > skills/git-safe-ops/SKILL.md << 'EOF'
+echo "[6/11] Creating skills/git-safe-ops/SKILL.md..."
+cat > skills/git-safe-ops/SKILL.md << 'EOF6'
 ---
 name: git-safe-ops
 description: >
@@ -669,10 +669,10 @@ Before ANY git operation involving remote:
 - [ ] After operation: git status verified
 - [ ] After operation: source files verified (ls src/app/)
 - [ ] Worklog.md updated with operation details
-EOF
+EOF6
 
-echo "[7/9] Creating skills/dev-watchdog/SKILL.md..."
-cat > skills/dev-watchdog/SKILL.md << 'EOF'
+echo "[7/11] Creating skills/dev-watchdog/SKILL.md..."
+cat > skills/dev-watchdog/SKILL.md << 'EOF7'
 ---
 name: dev-watchdog
 description: >
@@ -779,11 +779,10 @@ The cron task handler should:
 | `/tmp/zdev.log` | Server stdout/stderr |
 | `/home/z/my-project/dev.log` | Alternate log (bun creates this) |
 | Port 3000 | Standard dev server port (mandatory, per project config) |
-EOF
+EOF7
 
-echo "[8/9] Creating templates/AGENT_RULES.md..."
-mkdir -p templates
-cat > templates/AGENT_RULES.md << 'EOF'
+echo "[8/11] Creating AGENT_RULES.md..."
+cat > AGENT_RULES.md << 'EOFAGENT'
 # Agent Rules
 
 Mandatory rules for AI agents working on this project. Read before starting work.
@@ -856,14 +855,14 @@ After every git operation, log to `worklog.md`: operation, hash before/after, re
 ## 3. Dev Server Rules
 
 - Use `npx next dev -p 3000` directly (NOT `bun run dev`)
-- Use `127.0.0.1 not `localhost` for curl
+- Use `127.0.0.1` not `localhost` for curl
 - Redirect output: `</dev/null >/tmp/zdev.log 2>&1 &`
 - Wait 6 seconds before health check (Turbopack compile time)
 - If server returns 500: check logs, fix error, then restart (don't blindly restart)
 
 ## 4. Code Standards
 
-- No-Unicode Policy v2.1 [C] - zero non-Cyrillic non-ASCII in UI code
+- No-Unicode Policy v2.1 [C] - zero non-Cyrillic non-ASCII in UI code, AI-chat [W]
 - MARKDOWN_STANDARD v2.1 [W] - ASCII + Cyrillic + typographics in .md text, forbidden in headings/code
 - REPRODUCIBILITY-STANDARD - `.env.example` required, relative paths only
 - Use shadcn/ui components, do not build from scratch
@@ -899,7 +898,28 @@ See `instructions/writing-plans.md` for full details.
 | `git-safe-ops` | Before any git push/pull/rebase/merge with remote |
 | `dev-watchdog` | Starting, restarting, or checking dev server |
 
-## 8. Instructions to Follow
+## 8. Worklog System
+
+| File | Purpose |
+|------|---------|
+| `README_WORKLOG.md` | Full guide: how worklog works, sub-agent instructions |
+| `TASK_TEMPLATE.md` | Prompt templates for full-stack-developer, Explore, general-purpose |
+| `worklog.md` | Journal of all work sessions |
+
+## 9. Implementation Order
+
+Standards must be applied in sequence (each depends on the previous):
+
+1. Accept standards (No-Unicode, MARKDOWN_STANDARD, README_TEMPLATE)
+2. Deploy worklog system (README_WORKLOG, TASK_TEMPLATE, WORKLOG.md)
+3. REPRODUCIBILITY (env, db, paths)
+4. No-Unicode Policy [C] (ESLint rule + UI code cleanup)
+5. MARKDOWN_STANDARD [W] (.md files cleanup, including worklog files)
+6. README_TEMPLATE (assemble README by template)
+
+See `standards/ПОРЯДОК_внедрения_стандартов.md` for full details.
+
+## 10. Instructions to Follow
 
 | Instruction | File |
 |-------------|------|
@@ -912,36 +932,155 @@ See `instructions/writing-plans.md` for full details.
 ---
 
 Built with: Next.js 16 + TypeScript + Tailwind CSS
-EOF
+EOFAGENT
 
-echo "[9/9] Creating templates/worklog.md..."
-cat > templates/worklog.md << 'EOF'
-# Worklog
+echo "[9/11] Creating worklog.md..."
+cat > worklog.md << 'EOFWL'
+# Project Worklog
 
-Log of all work sessions. Each session starts with `---` separator.
+> Unified journal of all agent work.
+> Path: /home/z/my-project/worklog.md
 
-Format:
-```
 ---
-Task ID: <id>
-Agent: <agent name>
+
+## Task ID System
+
+| Pattern | Example | Usage |
+|---------|---------|-------|
+| N | 1, 2, 3 | Sequential tasks |
+| N-x | 2-a, 2-b | Parallel tasks |
+| N-x-y | 2-a-1 | Nested subtasks |
+
+---
+
+## Rules
+
+1. Read this file BEFORE work
+2. Add entry AFTER work
+3. NEVER overwrite - append only!
+
+---
+
+## Work History
+
+---
+Built with: Next.js 16 + TypeScript + Tailwind CSS
+EOFWL
+
+echo "[10/11] Creating README_WORKLOG.md..."
+cat > README_WORKLOG.md << 'EOFRWL'
+# Worklog System
+
+Single-file work journal shared by all agents.
+
+---
+
+## Files
+
+| File | Purpose |
+|------|---------|
+| `worklog.md` | Shared journal of all work sessions |
+| `README_WORKLOG.md` | This guide |
+| `TASK_TEMPLATE.md` | Prompt templates for sub-agents |
+
+---
+
+## Who Knows About Worklog
+
+```text
+Super Z (orchestrator)   --> KNOWS worklog
+  |
+  +-- full-stack-developer --> DOES NOT know
+  +-- Explore               --> DOES NOT know
+  +-- general-purpose       --> DOES NOT know
+```
+
+---
+
+## Checklist Before Calling Sub-Agent
+
+- [ ] Read current `worklog.md`
+- [ ] Identify context the sub-agent needs
+- [ ] Add WORKLOG section from TASK_TEMPLATE.md
+- [ ] Assign unique Task ID
+- [ ] Inject relevant past decisions
+- [ ] After return, append results to `worklog.md`
+EOFRWL
+
+echo "[11/11] Creating TASK_TEMPLATE.md..."
+cat > TASK_TEMPLATE.md << 'EOFTASK'
+# Task Prompt Templates
+
+Prompt templates for spawning sub-agents. Copy the relevant template,
+fill in placeholders, and use as the sub-agent prompt.
+
+---
+
+## full-stack-developer
+
+You are a full-stack developer on a Next.js 16 + TypeScript + Tailwind CSS project.
+
+### WORKLOG
+
+Task ID: <N>
 Task: <description>
 
-Work Log:
-- <step 1>
-- <step 2>
+Context from previous sessions:
+- <paste relevant worklog entries here>
 
-Stage Summary:
-- <results>
-```
-EOF
+### Your Task
+
+<describe the task here>
+
+After completing your work, report what you did so it can be added to the worklog.
+
+---
+
+## Explore
+
+You are an exploration agent on a Next.js 16 + TypeScript + Tailwind CSS project.
+
+### WORKLOG
+
+Task ID: <N>
+Task: <description>
+
+Context from previous sessions:
+- <paste relevant worklog entries here>
+
+### Your Task
+
+<describe what to investigate here>
+
+Report your findings so they can be added to the worklog.
+
+---
+
+## general-purpose
+
+You are a general-purpose agent on a Next.js 16 + TypeScript + Tailwind CSS project.
+
+### WORKLOG
+
+Task ID: <N>
+Task: <description>
+
+Context from previous sessions:
+- <paste relevant worklog entries here>
+
+### Your Task
+
+<describe the task here>
+
+After completing your work, report what you did so it can be added to the worklog.
+EOFTASK
 
 echo ""
 echo "========================================="
 echo "  SUCCESS!"
 echo "========================================="
 echo ""
-echo "Created 9 files in current directory:"
+echo "Created 11 files"
 echo ""
 echo "  instructions/"
 echo "    onboarding-protocol.md"
@@ -952,9 +1091,9 @@ echo "    writing-plans.md"
 echo "  skills/"
 echo "    git-safe-ops/SKILL.md"
 echo "    dev-watchdog/SKILL.md"
-echo "  templates/"
-echo "    AGENT_RULES.md"
-echo "    worklog.md"
+echo "  AGENT_RULES.md"
+echo "  worklog.md"
+echo "  README_WORKLOG.md"
+echo "  TASK_TEMPLATE.md"
 echo ""
-echo "Copy templates/AGENT_RULES.md and templates/worklog.md to your project root."
 echo "========================================="

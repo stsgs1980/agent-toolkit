@@ -79,6 +79,8 @@ skills/
   dev-watchdog/SKILL.md
 AGENT_RULES.md
 worklog.md
+README_WORKLOG.md
+TASK_TEMPLATE.md
 ```
 
 ### Option B: Clone with PAT (if you have a GitHub token)
@@ -89,6 +91,8 @@ cp -r /tmp/agent-toolkit/skills/ ./skills/
 cp -r /tmp/agent-toolkit/instructions/ ./instructions/
 cp /tmp/agent-toolkit/templates/AGENT_RULES.md ./AGENT_RULES.md
 cp /tmp/agent-toolkit/templates/worklog.md ./worklog.md
+cp /tmp/agent-toolkit/templates/README_WORKLOG.md ./README_WORKLOG.md
+cp /tmp/agent-toolkit/templates/TASK_TEMPLATE.md ./TASK_TEMPLATE.md
 mkdir -p upload && cp /tmp/agent-toolkit/standards/*.md ./upload/ 2>/dev/null
 rm -rf /tmp/agent-toolkit
 ```
@@ -103,13 +107,15 @@ cp -r /tmp/agent-toolkit/skills/ ./skills/
 cp -r /tmp/agent-toolkit/instructions/ ./instructions/
 cp /tmp/agent-toolkit/templates/AGENT_RULES.md ./AGENT_RULES.md
 cp /tmp/agent-toolkit/templates/worklog.md ./worklog.md
+cp /tmp/agent-toolkit/templates/README_WORKLOG.md ./README_WORKLOG.md
+cp /tmp/agent-toolkit/templates/TASK_TEMPLATE.md ./TASK_TEMPLATE.md
 mkdir -p upload && cp /tmp/agent-toolkit/standards/*.md ./upload/ 2>/dev/null
 rm -rf /tmp/agent-toolkit
 ```
 
 ### After Setup
 
-1. Verify files exist: `ls AGENT_RULES.md instructions/ skills/ worklog.md`
+1. Verify files exist: `ls AGENT_RULES.md instructions/ skills/ worklog.md README_WORKLOG.md TASK_TEMPLATE.md`
 2. Add "Agent Rules (Mandatory)" section to your README.md (see template below)
 3. Commit everything: `git add -A && git commit -m "setup: add agent toolkit"`
 4. On next chat session the agent will auto-onboard via onboarding-protocol.md

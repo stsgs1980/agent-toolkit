@@ -68,6 +68,11 @@ cp "$TMP_DIR/templates/AGENT_RULES.md" ./AGENT_RULES.md
 
 [ -f "worklog.md" ] || cp "$TMP_DIR/templates/worklog.md" ./worklog.md
 
+# === Copy worklog system ===
+info "Copying worklog system..."
+[ -f "README_WORKLOG.md" ] || cp "$TMP_DIR/templates/README_WORKLOG.md" ./README_WORKLOG.md
+[ -f "TASK_TEMPLATE.md" ] || cp "$TMP_DIR/templates/TASK_TEMPLATE.md" ./TASK_TEMPLATE.md
+
 # === Optional: copy standards ===
 info "Copying standards..."
 mkdir -p upload
@@ -103,7 +108,7 @@ echo "==============================="
 echo ""
 echo "Installed:"
 echo "  - skills/ (git-safe-ops, dev-watchdog)"
-echo "  - instructions/ (4 rules)"
+echo "  - instructions/ (5 rules)"
 echo "  - AGENT_RULES.md"
 echo "  - worklog.md"
 echo ""

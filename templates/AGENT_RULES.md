@@ -70,14 +70,14 @@ After every git operation, log to `worklog.md`: operation, hash before/after, re
 ## 3. Dev Server Rules
 
 - Use `npx next dev -p 3000` directly (NOT `bun run dev`)
-- Use `127.0.0.1 not `localhost` for curl
+- Use `127.0.0.1` not `localhost` for curl
 - Redirect output: `</dev/null >/tmp/zdev.log 2>&1 &`
 - Wait 6 seconds before health check (Turbopack compile time)
 - If server returns 500: check logs, fix error, then restart (don't blindly restart)
 
 ## 4. Code Standards
 
-- No-Unicode Policy v2.1 [C] - zero non-Cyrillic non-ASCII in UI code
+- No-Unicode Policy v2.1 [C] - zero non-Cyrillic non-ASCII in UI code, AI-chat [W]
 - MARKDOWN_STANDARD v2.1 [W] - ASCII + Cyrillic + typographics in .md text, forbidden in headings/code
 - REPRODUCIBILITY-STANDARD - `.env.example` required, relative paths only
 - Use shadcn/ui components, do not build from scratch
@@ -113,7 +113,28 @@ See `instructions/writing-plans.md` for full details.
 | `git-safe-ops` | Before any git push/pull/rebase/merge with remote |
 | `dev-watchdog` | Starting, restarting, or checking dev server |
 
-## 8. Instructions to Follow
+## 8. Worklog System
+
+| File | Purpose |
+|------|---------|
+| `README_WORKLOG.md` | Full guide: how worklog works, sub-agent instructions |
+| `TASK_TEMPLATE.md` | Prompt templates for full-stack-developer, Explore, general-purpose |
+| `worklog.md` | Journal of all work sessions |
+
+## 9. Implementation Order
+
+Standards must be applied in sequence (each depends on the previous):
+
+1. Accept standards (No-Unicode, MARKDOWN_STANDARD, README_TEMPLATE)
+2. Deploy worklog system (README_WORKLOG, TASK_TEMPLATE, WORKLOG.md)
+3. REPRODUCIBILITY (env, db, paths)
+4. No-Unicode Policy [C] (ESLint rule + UI code cleanup)
+5. MARKDOWN_STANDARD [W] (.md files cleanup, including worklog files)
+6. README_TEMPLATE (assemble README by template)
+
+See `standards/ПОРЯДОК_внедрения_стандартов.md` for full details.
+
+## 10. Instructions to Follow
 
 | Instruction | File |
 |-------------|------|
@@ -125,4 +146,4 @@ See `instructions/writing-plans.md` for full details.
 
 ---
 
-Built with: Next.js 16 + TypeScript + Tailwind CSS
+Built with: <технологии проекта> (см. README_TEMPLATE для дефолтного значения)
