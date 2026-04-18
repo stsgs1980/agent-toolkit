@@ -23,7 +23,7 @@
 
 | Документ | Уровень | Область применения |
 |----------|---------|-------------------|
-| **No-Unicode Policy v2.1** (этот документ) | [C] Critical, [I] Info | UI, продакшн-код, прототипы |
+| **No-Unicode Policy v2.1** (этот документ) | [C] Critical, [W] Warning, [I] Info | UI, продакшн-код, AI-чат, прототипы |
 | **MARKDOWN_STANDARD v2.1** | [W] Warning | README.md, документация проекта |
 
 ---

@@ -26,6 +26,18 @@ and references to all other instructions and skills.
 
 If AGENT_RULES.md does not exist -> skip to Step 2 and notify user.
 
+### Step 1.5: Read Project Configuration
+
+```
+Read PROJECT_CONFIG.md in project root.
+```
+
+Contains project-specific settings: stack, dev server command,
+project paths, and environment notes.
+
+If PROJECT_CONFIG.md does not exist -> ask user for stack and
+project structure before proceeding.
+
 ### Step 2: Read Worklog
 
 ```

@@ -2,7 +2,7 @@
 
 > Level: **[W] Warning** | Scope: README, project documentation
 >
-> Related standard: **No-Unicode Policy v2.1** (for code and UI - levels [C]/[I])
+> Related standard: **No-Unicode Policy v2.1** (for code and UI - levels [C]/[W]/[I])
 
 ---
 
@@ -26,7 +26,7 @@ This standard establishes rules for Markdown documentation formatting to ensure 
 | **[W] Warning** | README.md, CHANGELOG.md, docs/, project documentation | Comment in review, request to fix |
 
 **See also:**
-- **No-Unicode Policy v2.1** — for UI components [C], production code [C], prototypes [I]
+- **No-Unicode Policy v2.1** — for UI components [C], production code [C], AI-communication [W], prototypes [I]
 
 ---
 
