@@ -1,7 +1,14 @@
-<div align="center">
-  <img src="assets/logo.png" alt="Agent Toolkit" width="120" height="120" />
-  <h1>Agent Toolkit</h1>
-</div>
+    _                        _   _         _ _   
+   / \   __ _  _ __   _ __ | | | |  __ _ | | |_ 
+  / _ \ / _` || '_ \ | '__|| |_| | / _` || | __|
+ / ___ \| (_| || |_) || |   |  _  || (_| || | |_ 
+/_/   \_\__,_|| .__/ |_|   |_| |_| \__,_| \___|
+               |_|                                
+
+         Toolkit for AI Agent Projects
+            Standards + Skills + Rules
+
+---
 
 Unified toolkit for AI agent behavior rules, skills, and project standards.
 Copy into any Next.js project to ensure consistent agent behavior across sessions.
