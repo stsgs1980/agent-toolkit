@@ -1,6 +1,7 @@
-# Agent Toolkit
-
-![Agent Toolkit Banner](assets/logo-banner.png)
+<div align="center">
+  <img src="assets/logo.png" alt="Agent Toolkit" width="120" height="120" />
+  <h1>Agent Toolkit</h1>
+</div>
 
 Unified toolkit for AI agent behavior rules, skills, and project standards.
 Copy into any Next.js project to ensure consistent agent behavior across sessions.
