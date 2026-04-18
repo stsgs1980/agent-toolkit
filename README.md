@@ -1,12 +1,18 @@
 # Agent Toolkit
 
+![Agent Toolkit Banner](assets/logo-banner.png)
+
 Unified toolkit for AI agent behavior rules, skills, and project standards.
 Copy into any Next.js project to ensure consistent agent behavior across sessions.
 
 ## Structure
 
-```
+```text
 agent-toolkit/
+  assets/                          - Project logos and images
+    logo.png                       - Main square logo (1024x1024)
+    logo-banner.png                - README banner (1344x768)
+    favicon.png                    - Browser favicon
   skills/                          - Automated tools for agent
     git-safe-ops/SKILL.md          - Safe git operations (backup, force push)
     dev-watchdog/SKILL.md          - Dev server lifecycle management
@@ -15,20 +21,27 @@ agent-toolkit/
     git-workflow-rules.md          - Git operation rules
     language-rule.md               - Language matching rule
     diagnostic-disclosure.md       - Data loss disclosure protocol
-    writing-plans.md                - Task planning before coding
+    writing-plans.md               - Task planning before coding
   standards/                       - Code and documentation standards
+    No-Unicode_Policy_v2.1.md      - Unicode restrictions [C]
+    MARKDOWN_STANDARD_RU_v2.1.md   - Markdown formatting rules (Russian) [W]
+    MARKDOWN_STANDARD_EN_v2.1.md   - Markdown formatting rules (English) [W]
     README_TEMPLATE.md             - Mandatory README structure
-    MARKDOWN_STANDARD_RU_v2.1.md   - Markdown formatting rules (Russian)
-    MARKDOWN_STANDARD_EN_v2.1.md   - Markdown formatting rules (English)
-    No-Unicode_Policy_v2.1.md      - Unicode restrictions
     REPRODUCIBILITY-STANDARD.md    - Build reproducibility rules
+    README_WORKLOG.md              - Worklog system guide
+    TASK_TEMPLATE.md               - Prompt templates for sub-agents
+    WORKLOG.md                     - Worklog journal template
+    ПОРЯДОК_внедрения_стандартов.md - Implementation order (6 steps)
   templates/                       - Files to copy into new projects
     AGENT_RULES.md                 - Master rules file (copy and adapt)
+    README_WORKLOG.md              - Worklog guide (copy)
+    TASK_TEMPLATE.md               - Prompt templates (copy)
+    WORKLOG.md                     - Worklog template (copy)
     workflows/                     - Development workflows
       feature-development.md       - New feature: brainstorm -> plan -> implement -> QA
       bug-fix.md                   - Bug fix: reproduce -> diagnose -> fix -> verify
       refactor.md                  - Refactor: analyze -> plan -> refactor -> verify
-    e2e/                            - E2E test templates (Playwright)
+    e2e/                           - E2E test templates (Playwright)
     playwright.config.ts           - Playwright configuration
 ```
 
@@ -52,7 +65,7 @@ curl -sL https://ghp_YOUR_PAT@raw.githubusercontent.com/Sts8987/agent-toolkit/ma
 
 Files created:
 
-```
+```text
 instructions/
   onboarding-protocol.md
   git-workflow-rules.md
@@ -112,6 +125,31 @@ See `instructions/` for complete rule descriptions.
 See `skills/` for automated tooling.
 ```
 
+## Implementation Order
+
+Standards must be applied in order (each depends on the previous):
+
+```text
+Step 1: Accept standards (group B)         Read and accept rules
+        |
+        v
+Step 2: Deploy worklog (group A)           Copy, create WORKLOG.md, verify compliance
+        |
+        v
+Step 3: REPRODUCIBILITY                    Configure env, db, paths
+        |
+        v
+Step 4: No-Unicode Policy [C]              ESLint rule + UI code cleanup
+        |
+        v
+Step 5: MARKDOWN_STANDARD [W]              .md files cleanup (including group A)
+        |
+        v
+Step 6: README_TEMPLATE                    Assemble README by template
+```
+
+See `standards/ПОРЯДОК_внедрения_стандартов.md` for full details.
+
 ## What Each Component Does
 
 ### Skills (automated tools)
@@ -133,12 +171,20 @@ See `skills/` for automated tooling.
 
 ### Standards (code quality)
 
-| Standard | Purpose |
-|----------|---------|
-| README_TEMPLATE | Mandatory README sections (12 total) |
-| MARKDOWN_STANDARD | ASCII + Cyrillic + typographics in text, strict in headings/code |
-| No-Unicode_Policy | Zero non-Cyrillic non-ASCII in production code |
-| REPRODUCIBILITY-STANDARD | .env.example, relative paths only |
+| Standard | Level | Purpose |
+|----------|-------|---------|
+| No-Unicode Policy v2.1 | [C] Critical | Zero non-Cyrillic non-ASCII in production code, AI-chat [W] |
+| MARKDOWN_STANDARD v2.1 | [W] Warning | ASCII + Cyrillic + typographics in text, strict in headings/code |
+| README_TEMPLATE | - | Mandatory README sections (12 total) |
+| REPRODUCIBILITY-STANDARD | - | .env.example, relative paths only |
+
+### Worklog System (agent coordination)
+
+| File | Purpose |
+|------|---------|
+| README_WORKLOG.md | Full guide: how worklog works, why sub-agents need explicit instructions |
+| TASK_TEMPLATE.md | Ready-made prompt templates for full-stack-developer, Explore, general-purpose |
+| WORKLOG.md | Empty journal template to copy into project |
 
 ### Workflows (development process)
 
@@ -160,6 +206,7 @@ This toolkit was created from real incidents in Z.ai sandbox:
 
 ## Version
 
+v1.3.0 - Added logos (assets/), worklog system, ПОРЯДОК внедрения (6-step order), parameterized stack signature, AI-chat in No-Unicode Policy, (ref) exception for code blocks
 v1.2.1 - Updated standards to v2.1 (typographics allowed in text, EN standard added)
 v1.2.0 - Added writing-plans instruction (plan before code for tasks > 3 steps)
 v1.1.0 - Added development workflows (feature, bug-fix, refactor) + E2E templates
