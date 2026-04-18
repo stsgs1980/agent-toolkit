@@ -1,12 +1,6 @@
-    _                        _   _         _ _   
-   / \   __ _  _ __   _ __ | | | |  __ _ | | |_ 
-  / _ \ / _` || '_ \ | '__|| |_| | / _` || | __|
- / ___ \| (_| || |_) || |   |  _  || (_| || | |_ 
-/_/   \_\__,_|| .__/ |_|   |_| |_| \__,_| \___|
-               |_|                                
+# Agent Toolkit
 
-         Toolkit for AI Agent Projects
-            Standards + Skills + Rules
+**Standards + Skills + Rules** for AI agent projects.
 
 ---
 
