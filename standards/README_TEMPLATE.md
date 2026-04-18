@@ -23,7 +23,7 @@ Every README.md must contain the following sections in order:
 
 ## Template
 
-```markdown
+````markdown
 # Project Name
 
 Brief description of the project (1-2 sentences).
@@ -66,6 +66,13 @@ bun run db:push
 bun run dev
 ```
 
+## Project Structure
+
+- `src/app/` - Application routes
+- `src/components/` - UI components
+- `src/lib/` - Utilities
+- `prisma/` - Database schema
+
 ## Scripts
 
 | Script | Description |
@@ -73,13 +80,6 @@ bun run dev
 | `bun run dev` | Development server |
 | `bun run build` | Production build |
 | `bun run lint` | Lint check |
-
-## Project Structure
-
-- `src/app/` - Application routes
-- `src/components/` - UI components
-- `src/lib/` - Utilities
-- `prisma/` - Database schema
 
 ## Configuration
 
@@ -112,14 +112,16 @@ See `skills/` for automated tooling.
 
 ---
 Built with: Next.js 16 + TypeScript + Tailwind CSS
-```
+````
+
+Note: The stack signature above is the default for Next.js projects. Replace with the actual project stack if using a different technology. Format: `Built with: <Framework> + <Language> + <Styling>` (see MARKDOWN_STANDARD v2.1, section 7).
 
 ## Checklist
 
 Before submitting, verify:
 
 - [ ] No emoji in title or sections
-- [ ] No Unicode arrows (`->`, `=>`)
+- [ ] No ASCII arrows as list markers (use `-` for unordered lists)
 - [ ] No em dash in headings or code (use hyphen `-`)
 - [ ] No pseudo-graphics for tree structures
 - [ ] Stack Signature present at end
@@ -130,19 +132,24 @@ Before submitting, verify:
 ## Example Compliance
 
 ### Correct
-```markdown
+
+```text
 ## Features
 - Fast build - uses Turbopack
 - Type safe — full TypeScript
 ```
 
+Note: hyphen `-` is used as a separator in technical descriptions. Em dash `—` is allowed in plain text within list items per MARKDOWN_STANDARD, but prohibited in headings and code blocks.
+
 ### Incorrect
-```markdown
+
+```text
 ## Features
 - Fast build -> uses Turbopack
-## Features — Core (em dash in heading is prohibited)
+## Features — Core
 ```
+
+Note: `->` as a separator in list items violates the list marker rule. Em dash `—` in a heading is prohibited.
 
 ---
 Built with: Next.js 16 + TypeScript + Tailwind CSS
-

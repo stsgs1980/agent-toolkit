@@ -1,7 +1,3 @@
-### Файл 1: No-Unicode Policy v2.1.md
-*(Что изменилось: обновлены ссылки на Markdown Standard, исправлена регулярка для уровня [I], добавлено пояснение про типографику для уровня [W], подпись стека ограничена корневыми файлами).*
-
-```markdown
 # Стандарт: No-Unicode Policy v2.1
 
 > Стандарт использования символов, иконок и графики. Уровень Design System / Engineering Governance.
@@ -39,7 +35,7 @@
 | Уровень | Обозначение | Контекст | Действие |
 |---------|-------------|----------|----------|
 | Critical | [C] | UI, продакшн-код | Блокирует merge |
-| Warning | [W] | Документация, README | Предупреждение в review (см. MARKDOWN_STANDARD) |
+| Warning | [W] | Документация, README, AI-чат | Предупреждение в review (см. MARKDOWN_STANDARD) |
 | Info | [I] | Внутренние заметки, прототипы | Рекомендация |
 
 ### Применение уровней:
@@ -54,6 +50,9 @@
 | Внутренние заметки | [I] Info | Только разработчики |
 | Прототипы / MVP | [I] Info | Временный код |
 | Логи, debug | [I] Info | Не видны пользователю |
+| AI-коммуникация (чат) | [W] Warning | Профессиональный стиль общения агентов |
+
+**Примечание для AI-коммуникации:** Ответы AI-агентов в чате не должны содержать эмодзи и Unicode-графику. Это обеспечивает единый профессиональный стиль наравне с кодом и документацией. Сообщения пользователя не регламентируются данным стандартом.
 
 ---
 
@@ -137,7 +136,7 @@
 
 ### 6.4. Пример разрешённой диаграммы (уровень [I])
 
-```
+```text
 +-------------------+
 |    Component A    |
 +---------+---------+
@@ -190,7 +189,7 @@
 
 ### 8.1. Корректная формулировка
 
-```
+```text
 Output must contain only:
 - ASCII characters (a-z, A-Z, 0-9, standard punctuation)
 - Cyrillic characters (а-я, А-Я)
@@ -215,7 +214,8 @@ text.replace(/[^\x20-\x7E\u0400-\u04FF]/g, '')
 text.replace(/[^\x20-\x7E\u0400-\u04FF\-\>\<\=\|\+\^]/g, '')
 
 // ВНИМАНИЕ: Уровень [W] (документация) регулируется MARKDOWN_STANDARD v2.1.
-// Там типографские символы (—, –, °, ©) РАЗРЕШЕНЫ в обычном тексте, поэтому данная жесткая санитизация к .md файлам не применяется.
+// Там типографские символы (em dash, en dash, degree, copyright) РАЗРЕШЕНЫ в обычном тексте, поэтому данная
+// жесткая санитизация к .md файлам не применяется.
 ```
 
 ---
@@ -234,10 +234,13 @@ text.replace(/[^\x20-\x7E\u0400-\u04FF\-\>\<\=\|\+\^]/g, '')
 ### 9.2. Реализация fallback
 
 ```html
-<!-- SVG с fallback -->
+<!-- SVG с fallback через onerror -->
 <span class="icon">
-  <svg aria-hidden="true"><!-- icon --></svg>
-  <span class="icon-fallback">Save</span>
+  <svg onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"
+       aria-hidden="true">
+    <!-- icon content -->
+  </svg>
+  <span class="icon-fallback" style="display:none">Save</span>
 </span>
 ```
 
@@ -245,9 +248,7 @@ text.replace(/[^\x20-\x7E\u0400-\u04FF\-\>\<\=\|\+\^]/g, '')
 .icon-fallback {
   display: none;
 }
-.icon svg:not(:loaded) + .icon-fallback {
-  display: inline;
-}
+/* Fallback показывается через JS onerror на SVG-элементе */
 ```
 
 ---
@@ -277,6 +278,25 @@ module.exports = {
           context.report({
             node,
             message: 'Unicode graphics prohibited. Use SVG instead.'
+          });
+        }
+      },
+      TemplateLiteral(node) {
+        for (const quasi of node.quasis) {
+          if (emojiPattern.test(quasi.value.cooked)) {
+            context.report({
+              node,
+              message: 'Unicode graphics prohibited in template literals. Use SVG instead.'
+            });
+            break;
+          }
+        }
+      },
+      JSXText(node) {
+        if (emojiPattern.test(node.value)) {
+          context.report({
+            node,
+            message: 'Unicode graphics prohibited in JSX. Use SVG instead.'
           });
         }
       }
@@ -356,14 +376,22 @@ module.exports = {
 
 - [ ] См. MARKDOWN_STANDARD v2.1
 
+### Для AI-коммуникации (чат) [W]:
+
+- [ ] Нет эмодзи в ответах AI-агентов
+- [ ] Нет Unicode-графики в чате
+
 ---
 
 ## 14. Формат подписи стека
 
 - Размещение: правый нижний угол (только для корневых `README.md` и `CHANGELOG.md`)
-- Формат: `Built with: Next.js 16 + TypeScript + Tailwind CSS`
+- Формат: `Built with: <технологии проекта>` (конкретный стек определяется проектом, а не стандартом)
+- Пример (для Next.js-проектов): `Built with: Next.js 16 + TypeScript + Tailwind CSS`
 - Разрешено: латиница, кириллица, цифры, знаки + и :
 - Запрещено: эмодзи, Unicode-графика
+
+**Примечание:** Стандарт задаёт формат (структуру) подписи, а не конкретные технологии. Дефолтное значение для проектов данного стека см. в `README_TEMPLATE.md`.
 
 ---
 
@@ -374,6 +402,9 @@ module.exports = {
 | 1.0 | 2024-Q4 | Первоначальная версия, абсолютный запрет |
 | 2.0 | 2025-01 | Уровневый подход, whitelist, fallback-стратегия, связь с MARKDOWN_STANDARD, правила оформления кода |
 | 2.1 | 2025-01 | Синхронизация с MARKDOWN_STANDARD v2.1 (допуск типографики в тексте для [W], исправление regex для диаграмм, уточнение подписи стека) |
+| 2.1.1 | 2025-01 | Исправлен невалидный CSS `:loaded` на `onerror`, добавлена проверка TemplateLiteral и JSXText в ESLint-правило, удалены emoji из тела документа, убран двойной разделитель |
+| 2.1.2 | 2025-01 | Добавлена AI-коммуникация (чат) как контекст уровня [W]; ответы AI-агентов не должны содержать эмодзи и Unicode-графику; сообщения пользователя не регламентируются |
+| 2.1.3 | 2025-01 | Подпись стека параметризована: стандарт задаёт формат `Built with: <технологии>`, конкретный стек — ответственность проекта; дефолтное значение вынесено в README_TEMPLATE |
 
 ---
 
@@ -381,160 +412,3 @@ module.exports = {
 
 ---
 Built with: Next.js 16 + TypeScript + Tailwind CSS
-```
-
----
----
-
-### 📄 Файл 2: README_TEMPLATE.md
-*(Что изменилось: в чеклисте и примерах внизу документа длинное тире `—` теперь разрешено в тексте списков, но явно запрещено в заголовках).*
-
-```markdown
-# README_TEMPLATE.md
-
-This template defines the mandatory structure for all project README files.
-
-## Mandatory Sections
-
-Every README.md must contain the following sections in order:
-
-| # | Section | Required | Description |
-|---|---------|----------|-------------|
-| 1 | Title + Description | Yes | Project name and brief description |
-| 2 | Badges | Optional | Technology badges (SVG only) |
-| 3 | Features | Yes | Key capabilities |
-| 4 | Tech Stack | Yes | Technologies used |
-| 5 | Getting Started | Yes | Installation and run instructions |
-| 6 | Configuration | Optional | Environment variables, settings |
-| 7 | Project Structure | Optional | Directory layout |
-| 8 | API Reference | Optional | Endpoints, methods |
-| 9 | Scripts | Optional | NPM/Bun commands |
-| 10 | Development Rules | Optional | Code style, technology constraints |
-| 11 | Agent Rules | Conditional | Required if `AGENT_RULES.md` exists in project root |
-| 12 | Stack Signature | Yes | Mandatory footer |
-
-## Template
-
-```markdown
-# Project Name
-
-Brief description of the project (1-2 sentences).
-
-![Badge](https://img.shields.io/badge/Tech-Version-color?style=flat-square)
-
-## Features
-
-- Feature 1 - description
-- Feature 2 - description
-- Feature 3 - description
-
-## Tech Stack
-
-- **Framework** - description
-- **Language** - description
-- **Database** - description
-- **Other** - description
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ or Bun
-- Other requirements
-
-### Installation
-
-```bash
-# Install dependencies
-bun install
-
-# Configure environment
-cp .env.example .env
-
-# Setup database
-bun run db:push
-
-# Run development server
-bun run dev
-```
-
-## Scripts
-
-| Script | Description |
-|--------|-------------|
-| `bun run dev` | Development server |
-| `bun run build` | Production build |
-| `bun run lint` | Lint check |
-
-## Project Structure
-
-- `src/app/` - Application routes
-- `src/components/` - UI components
-- `src/lib/` - Utilities
-- `prisma/` - Database schema
-
-## Configuration
-
-### Environment Variables
-
-See `.env.example`:
-
-```env
-DATABASE_URL="file:./db/dev.db"
-```
-
-## Development Rules
-
-### Required Technologies
-- Technology 1
-- Technology 2
-
-### Code Style
-- Rule 1
-- Rule 2
-
-## Agent Rules (Mandatory)
-
-Any AI agent working on this project MUST read and follow `AGENT_RULES.md`
-before performing any operations.
-
-See `AGENT_RULES.md` for full details.
-See `instructions/` for complete rule descriptions.
-See `skills/` for automated tooling.
-
----
-Built with: Next.js 16 + TypeScript + Tailwind CSS
-```
-
-## Checklist
-
-Before submitting, verify:
-
-- [ ] No emoji in title or sections
-- [ ] No Unicode arrows (`->`, `=>`)
-- [ ] No em dash in headings or code (use hyphen `-`)
-- [ ] No pseudo-graphics for tree structures
-- [ ] Stack Signature present at end
-- [ ] All mandatory sections included
-- [ ] Agent Rules section present if AGENT_RULES.md exists
-- [ ] Code blocks have language specified
-
-## Example Compliance
-
-### Correct
-```markdown
-## Features
-- Fast build - uses Turbopack
-- Type safe — full TypeScript
-```
-
-### Incorrect
-```markdown
-## Features
-- Fast build -> uses Turbopack
-## Features — Core (em dash in heading is prohibited)
-```
-
----
-Built with: Next.js 16 + TypeScript + Tailwind CSS
-```

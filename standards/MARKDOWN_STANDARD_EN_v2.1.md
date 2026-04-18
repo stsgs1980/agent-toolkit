@@ -2,7 +2,7 @@
 
 > Level: **[W] Warning** | Scope: README, project documentation
 >
-> Related standard: **No-Unicode Policy v2.0** (for code and UI - levels [C]/[I])
+> Related standard: **No-Unicode Policy v2.1** (for code and UI - levels [C]/[I])
 
 ---
 
@@ -26,7 +26,7 @@ This standard establishes rules for Markdown documentation formatting to ensure 
 | **[W] Warning** | README.md, CHANGELOG.md, docs/, project documentation | Comment in review, request to fix |
 
 **See also:**
-- **No-Unicode Policy v2.0** — for UI components [C], production code [C], prototypes [I]
+- **No-Unicode Policy v2.1** — for UI components [C], production code [C], prototypes [I]
 
 ---
 
@@ -38,15 +38,17 @@ The following elements are **prohibited** in Markdown files:
 | :--- | :--- | :--- |
 | **Emoji** | Any pictograms: emotions, objects, UI symbols | No exceptions |
 | **Unicode icons** | Statuses, actions, notifications | Use text tags |
-| **Table pseudographics** | Border lines: `│`, `─`, `┌`, `┐` | Use MD syntax |
-| **Typographics in Code/Headings** | Em dash (`—`), degrees (`°`), copyright (`©`) | Allowed in plain text, strictly prohibited here |
+| **Table pseudographics** | Unicode box-drawing characters (ref) | Use MD syntax |
+| **Typographics in Code/Headings** | Em dash `—` (ref), degree `°` (ref), copyright `©` (ref) | Allowed in plain text, strictly prohibited here |
 
 **Prohibition scope (for Typographics):**
 
 - Headings and subheadings
-- Tables
+- Tables (except reference tables - see below)
 - Inline code and code blocks (comments, strings)
 - File and folder names
+
+**`(ref)` exception for reference tables and code blocks:** If the purpose of a table cell or a code block line is to identify a specific character (to show what is prohibited or allowed), the character may be included with a `(ref)` marker. This does not violate the spirit of the standard: the character is used as the object of description, not as formatting. Without the actual symbol, the example loses clarity: "Incorrect: `—` (ref) in heading" is demonstrative; "Incorrect: em dash in heading" is blind.
 
 ---
 
@@ -62,7 +64,7 @@ Allowed characters:
 | **Unicode letters** | Language-specific (Cyrillic, etc.) |
 | **Digits** | 0-9 |
 | **Basic punctuation** | . , ; : ! ? - _ ( ) [ ] { } |
-| **Typographic symbols (plain text only)** | `—` (em dash), `–` (en dash), `°` (degree), `©` (copyright), `±` (plus-minus) |
+| **Typographic symbols (plain text only)** | `—` em dash (ref), `–` en dash (ref), `°` degree (ref), `©` copyright (ref), `±` plus-minus (ref) |
 | **Whitespace** | space, tab, newline |
 
 ### 4.2. Whitelist for ASCII Diagrams
@@ -104,12 +106,12 @@ Use text labels instead of Unicode symbols:
 
 | Correct | Incorrect |
 |---------|-----------|
-| `[OK]` | Unicode check mark |
-| `[FAIL]` | Unicode X mark |
-| `[DONE]` | Emoji check |
-| `[TODO]` | Emoji clipboard |
-| `[WARNING]` | Unicode warning |
-| `[INFO]` | Unicode info |
+| `[OK]` | ✓ (ref) |
+| `[FAIL]` | ✗ (ref) |
+| `[DONE]` | ✅ (ref) |
+| `[TODO]` | 📋 (ref) |
+| `[WARNING]` | ⚠ (ref) |
+| `[INFO]` | ℹ (ref) |
 
 ---
 
@@ -120,13 +122,15 @@ Use text labels instead of Unicode symbols:
 - Use `#` for H1, `##` for H2, etc.
 - Do not use closing `#` symbols
 - Only one H1 per document
-- Do not use typographic symbols (like `—`) in headings
+- Do not use typographic symbols (like em dash) in headings
 
-```
+```text
 Correct:      # Heading
 Incorrect:    # Heading #
-Incorrect:    # Heading — Subtitle
+Incorrect:    # Heading — (ref) Subtitle
 ```
+
+The `—` (ref) symbol in the example above is a demonstration of the prohibited character; the `(ref)` marker indicates reference usage.
 
 ### 5.2. Lists
 
@@ -135,7 +139,7 @@ Incorrect:    # Heading — Subtitle
 - Always use `-` as the single marker for unordered lists.
 - Do not mix with `*` or `+`.
 
-```
+```text
 Correct:      - Item 1
 Incorrect:    * Item 1
 Incorrect:    -> Item 1
@@ -143,7 +147,7 @@ Incorrect:    -> Item 1
 
 **Ordered:**
 
-```
+```text
 1. First item
 2. Second item
 ```
@@ -166,19 +170,19 @@ Use the `processFile()` function for processing.
 
 **Code block** (with language specified):
 
-```markdown
+````markdown
 ```typescript
 const config = {
   encoding: 'utf-8',
   strict: true
 };
 ```
-```
+````
 
 **Unknown Languages Rule:**
 If the exact programming language or format is not supported by the renderer or is unknown, always specify `text` or `bash` instead of leaving the block blank.
 
-```
+```text
 Correct:      ```text
 Incorrect:    ```
 ```
@@ -242,8 +246,17 @@ Root documentation files must contain a stack signature at the end of the file.
 
 ```markdown
 ---
+Built with: <project technologies>
+```
+
+The specific stack is determined by the project, not the standard. Example for Next.js projects:
+
+```markdown
+---
 Built with: Next.js 16 + TypeScript + Tailwind CSS
 ```
+
+For the default value in this stack, see `README_TEMPLATE.md`.
 
 **Rules:**
 
@@ -256,7 +269,7 @@ Built with: Next.js 16 + TypeScript + Tailwind CSS
 
 ## 8. Control and Enforcement
 
-### 8.1. Level [W] Warning — Blocking Policy
+### 8.1. Level [W] Warning - Blocking Policy
 
 | Stage | Action | Blocks merge? |
 |-------|--------|---------------|
@@ -300,7 +313,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npx eslint '**/*.md' --rule 'no-irregular-whitespace: error'
+      - run: npm install eslint-plugin-markdown
+      - run: npx eslint --plugin markdown '**/*.md' --rule 'no-irregular-whitespace: error'
 ```
 
 ### 8.3. PR Rejection Criteria
@@ -312,7 +326,7 @@ PR **recommended for rejection** if it contains:
 3. Missing stack signature in root technical documents (`README.md`, `CHANGELOG.md`)
 4. Typographic symbols inside code blocks or headings
 
-### 8.4. Linting — Application Stages
+### 8.4. Linting - Application Stages
 
 | Stage | When | Tool | Action |
 |-------|------|------|--------|
@@ -325,7 +339,7 @@ PR **recommended for rejection** if it contains:
 ```json
 {
   "*.md": [
-    "eslint --rule 'no-irregular-whitespace: error'"
+    "eslint --plugin markdown --rule 'no-irregular-whitespace: error'"
   ]
 }
 ```
@@ -354,13 +368,13 @@ replace(/[^\x20-\x7E\u0400-\u04FF\-\>\<\=\|\+\^]/g, '')
 | Letters | a-z, A-Z (plus language-specific) |
 | Digits | 0-9 |
 | Punctuation | . , ; : ! ? - _ ( ) [ ] { } |
-| Typographics (plain text) | — – ° © ± |
+| Typographics (plain text) | `—` (ref), `–` (ref), `°` (ref), `©` (ref), `±` (ref) |
 
 ### 9.2. Exceptions by Agreement
 
 | Situation | Requirement |
 |-----------|-------------|
-| External requirements | Email campaigns — coordinate with marketing |
+| External requirements | Email campaigns - coordinate with marketing |
 | Localization | Languages with non-ASCII characters |
 
 ---
@@ -371,7 +385,7 @@ ASCII diagrams are **allowed** in documentation (README, docs/).
 
 ### 10.1. Architecture Diagram Example
 
-```
+```text
 +-------------------+
 |    Component A    |
 +---------+---------+
@@ -386,7 +400,7 @@ ASCII diagrams are **allowed** in documentation (README, docs/).
 
 ### 10.2. Flow Diagram Example
 
-```
+```text
 User Request --> API Gateway --> Auth Service
                                       |
                                       v
@@ -398,7 +412,7 @@ User Request --> API Gateway --> Auth Service
 
 ### 10.3. Sequence Diagram Example
 
-```
+```text
 Client          Server          Database
   |                |               |
   +----request---->|               |
@@ -413,7 +427,7 @@ Client          Server          Database
 
 - [ ] No emoji in documentation
 - [ ] No Unicode icons
-- [ ] No typographic symbols (`—`, `©`, etc.) in code blocks or headings
+- [ ] No typographic symbols (em dash, copyright, etc.) in code blocks or headings
 - [ ] Status indicators — text tags `[OK]`, `[FAIL]`
 - [ ] Unordered lists use strictly `-` marker
 - [ ] Unknown code blocks use `text` or `bash` fallback
@@ -430,6 +444,10 @@ Client          Server          Database
 | 1.0 | 2024-Q4 | Initial version |
 | 2.0 | 2025-01 | Level [W], link to No-Unicode Policy v2.0, ASCII diagram whitelist, [W] blocking policy, linting stages, code formatting rules |
 | 2.1 | 2025-01 | Allowed typographics in plain text; fixed `-` as sole list marker; clarified SVG via `![]()`; limited Stack Signature to root files; added `text/bash` fallback rule; removed redundant `v` from CI regex |
+| 2.1.1 | 2025-01 | Updated references from No-Unicode Policy v2.0 to v2.1; CI config updated with eslint-plugin-markdown; Unicode symbols in section 4.4 replaced with text descriptions (document must not violate its own standard); code blocks without language replaced with `text` |
+| 2.1.2 | 2025-01 | Introduced `(ref)` exception for reference tables: characters in identifier cells allowed with marker; restored specific Unicode characters in prohibited/allowed element tables; `Incorrect` examples again show the actual prohibited character |
+| 2.1.3 | 2025-01 | Extended `(ref)` exception to code blocks: identifier characters allowed with marker in code blocks too; `Incorrect` examples in code blocks now contain the actual symbol with `(ref)`; restored Unicode symbols in EN table 4.4 |
+| 2.1.4 | 2025-01 | Stack signature parameterized: format `Built with: <technologies>`, specific stack is project responsibility; default value moved to README_TEMPLATE |
 
 ---
 
@@ -437,4 +455,3 @@ Client          Server          Database
 
 ---
 Built with: Next.js 16 + TypeScript + Tailwind CSS
-```
