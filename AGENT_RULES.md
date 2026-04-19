@@ -1,6 +1,6 @@
 # Agent Rules
 
-> Toolkit version: **v1.4.0**
+> Toolkit version: **v1.5.0**
 >
 > Mandatory rules for AI agents working with this toolkit.
 > Read before starting work on any project.
@@ -168,6 +168,9 @@ See `instructions/writing-plans.md` for full details.
 
 | Skill | When to Use |
 |-------|-------------|
+| `api-retry` | Making HTTP requests to external APIs, encountering 502/503/504 errors |
+| `health-check` | Checking availability of chat.z.ai, monitoring API response times |
+| `fallback` | chat.z.ai is unavailable, need alternative providers |
 | `git-safe-ops` | Before any git push/pull/rebase/merge with remote |
 | `dev-watchdog` | Starting, restarting, or checking dev server |
 

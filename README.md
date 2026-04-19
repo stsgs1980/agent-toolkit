@@ -2,7 +2,7 @@
 
 **Standards + Skills + Rules** for AI-driven development
 
-> Toolkit version: **v1.4.1**
+> Toolkit version: **v1.5.0**
 
 ---
 
@@ -108,6 +108,9 @@ agent-toolkit/
     writing-plans.md          Plan before you code
 
   skills/                     Automated agent skills
+    api-retry/                HTTP retry logic with exponential backoff
+    health-check/              API health monitoring and failure detection
+    fallback/                 Multi-provider fallback strategy
     git-safe-ops/             Safe git push/pull/rebase
     dev-watchdog/             Dev server management
 
@@ -183,7 +186,7 @@ These are deployed into a project. They SUBMIT to Group B standards.
 
 | Component | Version |
 |-----------|---------|
-| **Toolkit** | **v1.4.0** |
+| **Toolkit** | **v1.5.0** |
 | MARKDOWN_STANDARD (RU/EN) | v2.1.4 |
 | No-Unicode_Policy | v2.1.3 |
 | WORKLOG / TASK_TEMPLATE / README_WORKLOG | v2.1.1 |
@@ -248,6 +251,7 @@ This toolkit is provided as-is for use with AI-driven development workflows.
 
 | Version | Changes |
 |---------|---------|
+| **v1.5.0** | Added network resilience skills: api-retry (exponential backoff, circuit breaker), health-check (API monitoring, failure detection), fallback (multi-provider strategy) |
 | **v1.4.1** | Added Readiness Checklist section to README |
 | **v1.4.0** | Unified toolkit: AGENT_RULES rewritten, PROJECT_CONFIG.md added, README overhauled, No-Unicode levels synced [C]+[W]+[I], REPRODUCIBILITY classified as Group B |
 | v1.3.0 | Added logos (assets/), worklog system, Implementation Order (6-step sequence), parameterized stack signature, AI-chat in No-Unicode Policy, `(ref)` exception for code blocks |
