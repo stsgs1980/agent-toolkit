@@ -45,14 +45,16 @@ Before any git operation that rewrites history (rebase, merge, pull, reset --har
 
 When `git push` is rejected (diverged branches):
 
-- `git push --force origin main` - CORRECT
+- `git push --force-with-lease origin main` - CORRECT
+- `git push --force origin main` - AVOID (overrides remote without safety check)
 - `git pull --rebase` - FORBIDDEN (blocks sandbox environment on conflict)
 
 ### 2.3 Never Pull After Remote URL Change
 
 After `git remote set-url origin <url>`:
 
-- `git push --force origin main` - CORRECT
+- `git push --force-with-lease origin main` - CORRECT
+- `git push --force origin main` - AVOID (no safety check)
 - `git pull` - FORBIDDEN (creates unnecessary conflicts)
 
 ### 2.4 No Panic Diagnostics
@@ -183,6 +185,7 @@ See `instructions/writing-plans.md` for full details.
 | Language Rule | `instructions/language-rule.md` |
 | Diagnostic Disclosure | `instructions/diagnostic-disclosure.md` |
 | Writing Plans | `instructions/writing-plans.md` |
+| Sandbox Rules | `instructions/sandbox-rules.md` |
 
 ## 9. Document Classification
 
@@ -218,6 +221,64 @@ Deploy AFTER Group B. These SUBMIT to Group B standards.
 | `AGENT_RULES.md` | This file -- agent behavioral rules |
 | `PROJECT_CONFIG.md` | Project-specific settings (stack, paths, server) |
 | `instructions/*.md` | Detailed behavioral instructions |
+
+## 10. Sandbox Z.ai
+
+Sandbox environment has specific constraints that affect all operations:
+
+- **Shared filesystem**: All chat sessions share the same filesystem. Files created
+  in one chat are visible in all other chats.
+- **Chat = Shell process**: Each chat session has its own shell process. When the
+  chat ends, the shell process dies, but files on disk remain.
+- **Process mortality**: Background processes (dev servers, watchers) die when the
+  chat session ends or after ~5 minutes of inactivity. Use `disown` to maximize
+  survival time.
+- **No cross-chat process sharing**: A process started in one chat cannot be
+  controlled from another chat. But files left behind can be used.
+- **Recovery from git lockup**: If a previous chat left git in a blocked state
+  (e.g., `needs merge`, `rebase in progress`), the ONLY safe recovery is:
+  ```bash
+  rm -rf .git/rebase-merge .git/rebase-apply
+  git reset --hard HEAD
+  ```
+  This must be done from a NEW chat session (the old one is blocked).
+
+## 11. Project in Sandbox
+
+The project MUST reside in `/home/z/my-project/`:
+
+- This is the sandbox's designated working directory
+- Do NOT create project clones in other directories (e.g., `/home/z/pmas/`)
+- If a project exists elsewhere, move it to `/home/z/my-project/`
+- All relative paths in configs must resolve from this directory
+- Dev server logs go to `/tmp/zdev.log`
+
+## 12. Dev Server Startup
+
+Starting the dev server requires specific handling in sandbox:
+
+```bash
+# Kill any existing process
+pkill -f 'next dev' 2>/dev/null
+sleep 1
+
+# Start with disown to survive parent shell death
+cd /home/z/my-project && npx next dev -p 3000 </dev/null >/tmp/zdev.log 2>&1 & disown
+
+# Wait for compilation
+sleep 6
+
+# Verify (always use 127.0.0.1, not localhost)
+curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/
+```
+
+Key rules:
+- Always use `disown` after backgrounding the server process
+- Always use `npx next dev`, NOT `bun run dev` (bun wrapper is unstable)
+- Always redirect output: `>/tmp/zdev.log 2>&1`
+- Always close stdin: `</dev/null`
+- Always use `127.0.0.1` for health checks (not `localhost` -- IPv6 issues)
+- Server lives ~5 min; watchdog should check every 5 min
 
 ---
 
