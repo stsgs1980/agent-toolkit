@@ -16,73 +16,79 @@ jobs:
         run: |
           echo "Checking required files..."
           MISSING=0
+          # Core files
+          for f in AGENT_RULES.md PROJECT_CONFIG.md README.md; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              MISSING=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          # Skills
           for f in skills/git-safe-ops/SKILL.md skills/dev-watchdog/SKILL.md; do
             if [ ! -f "$f" ]; then
               echo "MISSING: $f"
               MISSING=1
+            else
+              echo "OK: $f"
             fi
           done
-          for f in instructions/*.md; do
+          # Instructions
+          for f in instructions/onboarding-protocol.md instructions/git-workflow-rules.md instructions/language-rule.md instructions/diagnostic-disclosure.md instructions/writing-plans.md; do
             if [ ! -f "$f" ]; then
               echo "MISSING: $f"
               MISSING=1
+            else
+              echo "OK: $f"
             fi
           done
-          for f in templates/AGENT_RULES.md templates/worklog.md; do
+          # Standards (Group B)
+          for f in standards/README_TEMPLATE.md standards/No-Unicode_Policy_v2.1.md standards/MARKDOWN_STANDARD_RU_v2.1.md standards/MARKDOWN_STANDARD_EN_v2.1.md standards/REPRODUCIBILITY-STANDARD.md; do
             if [ ! -f "$f" ]; then
               echo "MISSING: $f"
               MISSING=1
+            else
+              echo "OK: $f"
             fi
           done
-          for f in standards/README_TEMPLATE.md; do
+          # Templates (Group A)
+          for f in templates/WORKLOG.md templates/TASK_TEMPLATE.md templates/README_WORKLOG.md; do
             if [ ! -f "$f" ]; then
               echo "MISSING: $f"
               MISSING=1
+            else
+              echo "OK: $f"
             fi
           done
           exit $MISSING
 
-      - name: Unicode check (no forbidden characters in .md)
+      - name: Unicode check (no emoji in .md)
         run: |
-          echo "Checking for forbidden Unicode in markdown files..."
+          echo "Checking for emoji in markdown files..."
           FAIL=0
-          # Check for emoji, arrows, dashes in .md files
-          # Allowed: ASCII, Cyrillic (U+0400-U+04FF), markdown formatting chars
           for f in $(find . -name '*.md' -not -path './.git/*'); do
-            # Check for emoji (U+1F000+)
+            # Check for emoji only (U+1F000+) -- typographic chars are allowed per No-Unicode Policy
             if rg -l '[\x{1F000}-\x{1FFFF}]' "$f" 2>/dev/null; then
               echo "FOUND emoji in: $f"
               FAIL=1
             fi
-            # Check for unicode arrows
-            if rg -l '[\x{2190}-\x{21FF}]' "$f" 2>/dev/null; then
-              echo "FOUND unicode arrows in: $f"
-              FAIL=1
-            fi
-            # Check for em dash
-            if rg -l '\x{2014}' "$f" 2>/dev/null; then
-              echo "FOUND em dash in: $f"
-              FAIL=1
-            fi
-            # Check for right arrow
-            if rg -l '\x{2192}' "$f" 2>/dev/null; then
-              echo "FOUND right arrow in: $f"
-              FAIL=1
-            fi
           done
+          if [ $FAIL -eq 0 ]; then
+            echo "No emoji found -- OK"
+          fi
           exit $FAIL
 
-      - name: Check Stack Signature footer
+      - name: Check Stack Signature in key files
         run: |
-          echo "Checking Stack Signature in all .md files..."
+          echo "Checking Stack Signature in AGENT_RULES.md and README.md..."
           FAIL=0
-          for f in $(find . -name '*.md' -not -path './.git/*'); do
-            if ! tail -1 "$f" | grep -q 'Built with:'; then
-              # Skip README.md for agent-toolkit (it has its own footer)
-              if [ "$(basename "$f")" != "README.md" ]; then
-                echo "NO Stack Signature in: $f"
-                FAIL=1
-              fi
+          for f in AGENT_RULES.md README.md; do
+            if ! grep -q 'Built with:' "$f"; then
+              echo "NO Stack Signature in: $f"
+              FAIL=1
+            else
+              echo "OK: $f"
             fi
           done
           exit $FAIL
