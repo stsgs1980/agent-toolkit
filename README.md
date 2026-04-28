@@ -28,7 +28,7 @@ It solves three problems:
 
 ```bash
 # Clone the toolkit
-git clone https://github.com/Sts8987/agent-toolkit.git
+git clone https://github.com/stsgs1980/agent-toolkit.git
 
 # Copy standards and templates to your project
 cp -r agent-toolkit/standards/    your-project/standards/
@@ -43,7 +43,7 @@ cp agent-toolkit/PROJECT_CONFIG.md your-project/
 ### Option B: Standards Only
 
 ```bash
-git clone https://github.com/Sts8987/agent-toolkit.git
+git clone https://github.com/stsgs1980/agent-toolkit.git
 cp -r agent-toolkit/standards/ your-project/standards/
 ```
 

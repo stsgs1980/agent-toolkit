@@ -7,7 +7,7 @@
 set -e
 
 # === Configuration ===
-GITHUB_USER="Sts8987"
+GITHUB_USER="stsgs1980"
 REPO="agent-toolkit"
 TOOLKIT_VERSION="v1.4.1"
 TMP_DIR="/tmp/agent-toolkit-setup"
