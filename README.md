@@ -1,8 +1,12 @@
+<p align="center">
+  <img src="assets/logo-banner.png" alt="Agent Toolkit" width="800">
+</p>
+
 # Agent Toolkit
 
 **Standards + Skills + Rules** for AI-driven development
 
-> Toolkit version: **v1.5.0**
+> Toolkit version: **v1.4.2**
 
 ---
 
@@ -87,6 +91,11 @@ agent-toolkit/
   PROJECT_CONFIG.md           Project-specific settings (stack, server, paths)
   README.md                   This file
 
+  assets/                     Visual assets
+    logo.png                  Main logo (1024x1024)
+    logo-banner.png           README banner (1344x768)
+    favicon.png               Browser favicon (64x64)
+
   standards/                  Group B: Governance documents (apply first)
     MARKDOWN_STANDARD_RU_v2.1.md    Markdown formatting (Russian) v2.1.4
     MARKDOWN_STANDARD_EN_v2.1.md    Markdown formatting (English) v2.1.4
@@ -108,9 +117,6 @@ agent-toolkit/
     writing-plans.md          Plan before you code
 
   skills/                     Automated agent skills
-    api-retry/                HTTP retry logic with exponential backoff
-    health-check/              API health monitoring and failure detection
-    fallback/                 Multi-provider fallback strategy
     git-safe-ops/             Safe git push/pull/rebase
     dev-watchdog/             Dev server management
 
@@ -186,7 +192,7 @@ These are deployed into a project. They SUBMIT to Group B standards.
 
 | Component | Version |
 |-----------|---------|
-| **Toolkit** | **v1.5.0** |
+| **Toolkit** | **v1.4.2** |
 | MARKDOWN_STANDARD (RU/EN) | v2.1.4 |
 | No-Unicode_Policy | v2.1.3 |
 | WORKLOG / TASK_TEMPLATE / README_WORKLOG | v2.1.1 |
@@ -251,7 +257,7 @@ This toolkit is provided as-is for use with AI-driven development workflows.
 
 | Version | Changes |
 |---------|---------|
-| **v1.5.0** | Added network resilience skills: api-retry (exponential backoff, circuit breaker), health-check (API monitoring, failure detection), fallback (multi-provider strategy) |
+| **v1.4.2** | Re-added assets (logo, banner, favicon) as real PNG; banner in README header |
 | **v1.4.1** | Added Readiness Checklist section to README |
 | **v1.4.0** | Unified toolkit: AGENT_RULES rewritten, PROJECT_CONFIG.md added, README overhauled, No-Unicode levels synced [C]+[W]+[I], REPRODUCIBILITY classified as Group B |
 | v1.3.0 | Added logos (assets/), worklog system, Implementation Order (6-step sequence), parameterized stack signature, AI-chat in No-Unicode Policy, `(ref)` exception for code blocks |
